@@ -1,1 +1,1 @@
-# WordWiz
+# Destiny Trivia
