@@ -8,11 +8,11 @@
 - SWC (Speedy Web Compiler)
 - Runtime: Bun
 # How to Run
- cd project
- bun i
- bun run dev
+ cd project <br>
+ bun i <br>
+ bun run dev <br>
 
 # Requirements
-  Node 18+ or 20+
+  Node 18+ or 20+ <br>
   bun -> https://bun.sh/
   
