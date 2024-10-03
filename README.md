@@ -10,7 +10,7 @@
 # How to Run
  cd project <br>
  bun i <br>
- bun run dev <br>
+ bun run <script here> (e.g. dev) <br>
 
 # Requirements
   Node 18+ or 20+ <br>
