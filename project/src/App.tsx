@@ -1,14 +1,12 @@
-import { Box } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Board from "./components/Board";
+
+const NUM_ROWS = 3;
+const NUM_COLS = 3;
 
 function App() {
   return (
     <>
-      <Box sx={{ width: "100%" }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid size={6}>2</Grid>
-        </Grid>
-      </Box>
+      <Board num_rows={NUM_ROWS} num_cols={NUM_COLS} />
     </>
   );
 }
