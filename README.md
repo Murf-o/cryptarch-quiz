@@ -1,4 +1,4 @@
-# Destiny Trivia
+# Cryptarch Quiz
 
 # Tech Stack
 
