@@ -6,13 +6,10 @@
 - Vite.js
 - TypeScript
 - SWC (Speedy Web Compiler)
-- Runtime: Bun
-# How to Run
- cd project <br>
- bun i <br>
- bun run <script here> (e.g. dev) <br>
+- Runtime: Node
 
-# Requirements
-  Node 18+ or 20+ <br>
-  bun -> https://bun.sh/
-  
+# How to Run
+
+cd project <br>
+bun i <br>
+npm run <script here> (e.g. dev) <br>

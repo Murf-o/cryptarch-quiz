@@ -59,7 +59,7 @@ function ItemSearchModal({
         <Autocomplete
           sx={autocompleteStyle}
           freeSolo
-          options={["gun", "gun2", "gun3"]}
+          options={["gun", "gun2", "gun3", "gun4"]}
           renderInput={(params) => <TextField {...params} label="Search" />}
         />
       </Box>
