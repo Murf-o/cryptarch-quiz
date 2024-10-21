@@ -1,4 +1,5 @@
 import Board from "./components/Board";
+import HomeNavbar from "./components/HomeNavbar";
 
 const NUM_ROWS = 3;
 const NUM_COLS = 3;
@@ -15,6 +16,8 @@ function App() {
           display: "flex",
         }}
       >
+        {/* navbar thing -- sign-up/login and all that */}
+        <HomeNavbar />
         <div
           style={{
             width: "100%",
