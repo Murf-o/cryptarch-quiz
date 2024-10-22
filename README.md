@@ -8,8 +8,8 @@
 - SWC (Speedy Web Compiler)
 - Runtime: Node
 
-# How to Run
-cd project <br>
+# How to Run Frontend (Client)
+cd frontend <br>
 npm i <br>
 npm run <script here> (e.g. dev) <br>
   
