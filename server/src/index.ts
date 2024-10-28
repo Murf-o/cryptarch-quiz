@@ -16,6 +16,7 @@ const BUNGIE_API_KEY = process.env.BUNGIE_API_KEY;
 
 const GET_MANIFEST_URL = "/get-manifest-shit";
 app.get(GET_MANIFEST_URL, async (req: Request, res: Response) => {
+  /**NOTE: should move to this to just do it on startup, rather than on every request leaving it here for now till we do that */
   if (!BUNGIE_API_KEY) return res.status(500).send("BUNGIE API KEY undefined");
 
   const resp = await fetch(
