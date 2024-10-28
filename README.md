@@ -12,6 +12,15 @@
 cd frontend <br>
 npm i <br>
 npm run <script here> (e.g. dev) <br>
+
+# Server
+cd server <br>
+npm i <br>
+npm run <script here> <br>
+Scripts: <br> 
+ -  **dev**: run server via the index.ts file (use this when developing/writing code) <br> 
+ -  **build**: compile typescript <br> 
+ -  **start**: runs the compiled code
   
 # Hot Reloads
 If on windows using WSL, you may not be able to utilize hot reloads -- see [this](https://github.com/oven-sh/bun/issues/4335#issuecomment-1694387577) <br>
