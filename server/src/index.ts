@@ -18,10 +18,10 @@ app.use(cors());
 
 const BUNGIE_API_KEY = process.env.BUNGIE_API_KEY;
 const BUNGIE_MANIFEST_API_ENDPOINT = process.env.BUNGIE_MANIFEST_API_ENDPOINT;
-const DB_FILE_NAME = process.env.DB_FILE_NAME;
+const DB_FILE_NAME = process.env.DB_FILE_NAME!;
 
 async function downloadAndOpenManifest(manifestUrl: string) {
-  // Step 1: fetch the zip
+  // Step 1: fetch the manifest
   const response = await fetch("https://bungie.net" + manifestUrl);
   if (!response.ok) {
     throw new Error(`Failed to fetch manifest: ${response.statusText}`);
@@ -29,24 +29,38 @@ async function downloadAndOpenManifest(manifestUrl: string) {
 
   // Declare paths/directory
   const directoryName = "./manifest_data/";
-  const filePath = path.join(directoryName, "manifest.content");
+  const contentFilePath = path.join(directoryName, "manifest.content");
 
   // Ensure the directory exists
   await fs.mkdir(directoryName, { recursive: true });
 
   // Step 2: Save the .content file
-  const fileStream = await fs.writeFile(
-    filePath,
+  await fs.writeFile(
+    contentFilePath,
     await response.arrayBuffer().then((arrayBuffer) => Buffer.from(arrayBuffer))
   );
-  console.log(`Manifest saved to ${filePath}`);
+  console.log(`Manifest saved to ${contentFilePath}`);
 
-  // Step 3: Create a ZIP archive
+  // Step 3: Rename to a zip file
+  let extractedFiles = await fs.readdir(directoryName);
   const zipFilePath = path.join(directoryName, "manifest.zip");
-  const zip = new AdmZip();
-  zip.addLocalFile(filePath);
-  zip.writeZip(zipFilePath);
-  console.log(`Manifest zipped to ${zipFilePath}`);
+  let savedZip = false;
+  for (const file of extractedFiles) {
+    const filePath = path.join(directoryName, file);
+    if (file.endsWith(".content")) {
+      await fs.rename(filePath, zipFilePath);
+      console.log(`Manifest zipped to ${zipFilePath}`);
+      savedZip = true;
+      break;
+    }
+  }
+
+  if (!savedZip) throw new Error("Failed to save content file as a zip");
+
+  // const zipFilePath = path.join(directoryName, "manifest.zip");
+  // const zip = new AdmZip();
+  // zip.addLocalFile(filePath);
+  // zip.writeZip(zipFilePath);
 
   // Step 4: Extract the ZIP file
   const zipExtract = new AdmZip(zipFilePath);
@@ -55,20 +69,12 @@ async function downloadAndOpenManifest(manifestUrl: string) {
   console.log(`ZIP extracted to ${extractedZipPath}`);
 
   // Step 5: Rename the extracted content file to an SQLite3 file
-  const sqliteFileName = DB_FILE_NAME || "manifest_db.sqlite3"; // Desired name for the SQLite file
-  const extractedFiles = await fs.readdir(extractedZipPath);
-
-  if (extractedFiles.length <= 0) {
-    throw new Error(
-      `No files found in the extracted directory: ${extractedZipPath}`
-    );
-  }
+  extractedFiles = await fs.readdir(extractedZipPath);
 
   const oldFilePath = path.join(extractedZipPath, extractedFiles[0]);
-  const newFilePath = path.join(extractedZipPath, sqliteFileName);
-  await fs.rename(oldFilePath, newFilePath);
+  await fs.rename(oldFilePath, DB_FILE_NAME);
 
-  console.log(`Renamed ${extractedFiles[0]} to ${sqliteFileName}`);
+  console.log(`Renamed ${extractedFiles[0]} to ${DB_FILE_NAME}`);
 }
 
 async function getManifestURL() {
