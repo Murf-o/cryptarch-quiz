@@ -12,19 +12,24 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@libsql/client": "^0.14.0",
     "adm-zip": "^0.5.16",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "drizzle-kit": "^0.26.2",
+    "drizzle-orm": "^0.35.3",
+    "drizzle-orm-sqlite": "^0.16.1",
     "express": "^4.21.1",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@types/adm-zip": "^0.5.6",
     "@types/express": "^5.0.0",
-    "@types/node": "^22.8.1",
+    "@types/node": "^22.8.2",
     "concurrently": "^9.0.1",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "^5.6.3"
   }
 }

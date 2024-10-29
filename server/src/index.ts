@@ -18,6 +18,7 @@ app.use(cors());
 
 const BUNGIE_API_KEY = process.env.BUNGIE_API_KEY;
 const BUNGIE_MANIFEST_API_ENDPOINT = process.env.BUNGIE_MANIFEST_API_ENDPOINT;
+const DB_FILE_NAME = process.env.DB_FILE_NAME;
 
 async function downloadAndOpenManifest(manifestUrl: string) {
   // Step 1: fetch the zip
@@ -49,12 +50,12 @@ async function downloadAndOpenManifest(manifestUrl: string) {
 
   // Step 4: Extract the ZIP file
   const zipExtract = new AdmZip(zipFilePath);
-  const extractedZipPath = path.join(directoryName, "sqllite_db");
+  const extractedZipPath = "./src/db";
   zipExtract.extractAllTo(extractedZipPath, true);
   console.log(`ZIP extracted to ${extractedZipPath}`);
 
   // Step 5: Rename the extracted content file to an SQLite3 file
-  const sqliteFileName = "manifest_db.sqlite3"; // Desired name for the SQLite file
+  const sqliteFileName = DB_FILE_NAME || "manifest_db.sqlite3"; // Desired name for the SQLite file
   const extractedFiles = await fs.readdir(extractedZipPath);
 
   if (extractedFiles.length <= 0) {
