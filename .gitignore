@@ -25,3 +25,4 @@ dist-ssr
 
 # Ignore manifest_data
 manifest_data
+server/src/database

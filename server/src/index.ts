@@ -57,24 +57,22 @@ async function downloadAndOpenManifest(manifestUrl: string) {
 
   if (!savedZip) throw new Error("Failed to save content file as a zip");
 
-  // const zipFilePath = path.join(directoryName, "manifest.zip");
-  // const zip = new AdmZip();
-  // zip.addLocalFile(filePath);
-  // zip.writeZip(zipFilePath);
-
   // Step 4: Extract the ZIP file
   const zipExtract = new AdmZip(zipFilePath);
-  const extractedZipPath = "./src/db";
+  const extractedZipPath = "./src/database";
   zipExtract.extractAllTo(extractedZipPath, true);
   console.log(`ZIP extracted to ${extractedZipPath}`);
 
   // Step 5: Rename the extracted content file to an SQLite3 file
   extractedFiles = await fs.readdir(extractedZipPath);
-
-  const oldFilePath = path.join(extractedZipPath, extractedFiles[0]);
-  await fs.rename(oldFilePath, DB_FILE_NAME);
-
-  console.log(`Renamed ${extractedFiles[0]} to ${DB_FILE_NAME}`);
+  for (const file of extractedFiles) {
+    const oldFilePath = path.join(extractedZipPath, file);
+    if (file.endsWith(".content")) {
+      await fs.rename(oldFilePath, DB_FILE_NAME);
+      console.log(`Renamed ${extractedFiles[0]} to ${DB_FILE_NAME}`);
+      break;
+    }
+  }
 }
 
 async function getManifestURL() {
