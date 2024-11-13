@@ -74,23 +74,20 @@ function ItemSearchModal({
                 .slice(0, 10) // Only show top 10 matching options
           }
           renderInput={(params) => <TextField {...params} label="Search" />}
-          renderOption={(props, option) => {
-            console.log(option);
-            return (
-              <Box
-                component="li"
-                {...props}
-                sx={{ display: "flex", alignItems: "center" }}
-              >
-                <img
-                  src={option.iconURL}
-                  alt={option.name}
-                  style={{ width: 40, height: 40, marginRight: 16 }}
-                />
-                {option.name}
-              </Box>
-            );
-          }}
+          renderOption={(props, option) => (
+            <Box
+              component="li"
+              {...props}
+              sx={{ display: "flex", alignItems: "center" }}
+            >
+              <img
+                src={option.iconURL}
+                alt={option.name}
+                style={{ width: 40, height: 40, marginRight: 16 }}
+              />
+              {option.name}
+            </Box>
+          )}
         />
       </Box>
     </Modal>
