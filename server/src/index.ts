@@ -140,7 +140,7 @@ async function parseItemData(
 
   for (let i = 0; i < data.length; ++i) {
     const json = JSON.parse(data[i].json as string);
-    if (json?.itemTypeDisplayName) {
+    if (json?.itemTypeDisplayName && json?.collectibleHash) {
       const itemType: string = json.itemTypeDisplayName;
       if (WEAPON_TYPES.has(itemType)) {
         const name: string = json.displayProperties.name;
