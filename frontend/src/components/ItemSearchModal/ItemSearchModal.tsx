@@ -1,4 +1,5 @@
 import { Autocomplete, Box, Modal, TextField } from "@mui/material";
+import { WeaponItem } from "../../App";
 
 const style = {
   position: "absolute",
@@ -47,11 +48,13 @@ const autocompleteStyle = {
 interface ItemSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
+  weaponItems: WeaponItem[];
 }
 
 function ItemSearchModal({
   isOpen,
   onClose,
+  weaponItems,
 }: ItemSearchModalProps): React.ReactNode {
   return (
     <Modal open={isOpen} onClose={onClose}>
@@ -59,7 +62,15 @@ function ItemSearchModal({
         <Autocomplete
           sx={autocompleteStyle}
           freeSolo
-          options={["gun", "gun2", "gun3", "gun4"]}
+          options={weaponItems.map((json) => json.name)}
+          filterOptions={
+            (options, state) =>
+              options
+                .filter((option) =>
+                  option.toLowerCase().includes(state.inputValue.toLowerCase())
+                )
+                .slice(0, 10) // Only show top 10 matching options
+          }
           renderInput={(params) => <TextField {...params} label="Search" />}
         />
       </Box>

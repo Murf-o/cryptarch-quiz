@@ -1,13 +1,19 @@
 import { Button, Grid2 } from "@mui/material";
 import React, { useState } from "react";
 import ItemSearchModal from "../ItemSearchModal";
+import { WeaponItem } from "../../App";
 
 interface BoardProps {
   num_rows: number;
   num_cols: number;
+  weaponItems: WeaponItem[];
 }
 
-function Board({ num_rows, num_cols }: BoardProps): React.ReactNode {
+function Board({
+  num_rows,
+  num_cols,
+  weaponItems,
+}: BoardProps): React.ReactNode {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   return (
     <>
@@ -28,6 +34,7 @@ function Board({ num_rows, num_cols }: BoardProps): React.ReactNode {
       <ItemSearchModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        weaponItems={weaponItems}
       />
     </>
   );

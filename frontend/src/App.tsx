@@ -1,10 +1,44 @@
+import { useEffect, useState } from "react";
 import Board from "./components/Board";
 import HomeNavbar from "./components/HomeNavbar";
 
 const NUM_ROWS = 3;
 const NUM_COLS = 3;
 
+export interface WeaponItem {
+  name: string;
+  itemType: string;
+  hasIcon: boolean;
+  icon: string;
+  elementType: string;
+  tier: string;
+  // Add other properties if needed, like itemType, icon, etc.
+}
+
 function App() {
+  const [weaponItems, setWeaponItems] = useState<WeaponItem[]>([]);
+  // const [loading, setLoading] = useState(true);  // Optional: For loading state
+
+  useEffect(() => {
+    // Define the async function inside useEffect
+    const fetchWeaponItems = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/item_data");
+        if (!response.ok) {
+          throw new Error(`Error fetching data: ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log(data);
+        setWeaponItems(data);
+      } catch (error) {
+        console.error("Failed to fetch weapon items:", error);
+      } finally {
+        // setLoading(false);
+      }
+    };
+    fetchWeaponItems();
+  }, []);
+
   return (
     <>
       <div
@@ -26,7 +60,11 @@ function App() {
             alignItems: "center",
           }}
         >
-          <Board num_rows={NUM_ROWS} num_cols={NUM_COLS} />
+          <Board
+            num_rows={NUM_ROWS}
+            num_cols={NUM_COLS}
+            weaponItems={weaponItems}
+          />
         </div>
       </div>
     </>
