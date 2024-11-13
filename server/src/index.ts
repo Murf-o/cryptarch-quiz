@@ -144,7 +144,7 @@ async function parseItemData(
       const itemType: string = json.itemTypeDisplayName;
       if (WEAPON_TYPES.has(itemType)) {
         const name: string = json.displayProperties.name;
-        const iconUrl: string =
+        const iconURL: string =
           "https://www.bungie.net/" + json.displayProperties.icon;
         const hasIcon: boolean = json.displayProperties.hasIcon;
         const tier: string = json.inventory.tierTypeName;
@@ -158,7 +158,7 @@ async function parseItemData(
           elementType,
           // damageType,
           hasIcon,
-          icon: iconUrl,
+          iconURL,
         });
       }
     }

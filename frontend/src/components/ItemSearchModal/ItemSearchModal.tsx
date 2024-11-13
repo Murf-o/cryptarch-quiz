@@ -61,17 +61,36 @@ function ItemSearchModal({
       <Box sx={style}>
         <Autocomplete
           sx={autocompleteStyle}
-          freeSolo
-          options={weaponItems.map((json) => json.name)}
+          options={weaponItems}
+          getOptionLabel={(option) => option.name} // Display the name as the label
           filterOptions={
             (options, state) =>
               options
                 .filter((option) =>
-                  option.toLowerCase().includes(state.inputValue.toLowerCase())
+                  option.name
+                    .toLowerCase()
+                    .includes(state.inputValue.toLowerCase())
                 )
                 .slice(0, 10) // Only show top 10 matching options
           }
           renderInput={(params) => <TextField {...params} label="Search" />}
+          renderOption={(props, option) => {
+            console.log(option);
+            return (
+              <Box
+                component="li"
+                {...props}
+                sx={{ display: "flex", alignItems: "center" }}
+              >
+                <img
+                  src={option.iconURL}
+                  alt={option.name}
+                  style={{ width: 40, height: 40, marginRight: 16 }}
+                />
+                {option.name}
+              </Box>
+            );
+          }}
         />
       </Box>
     </Modal>

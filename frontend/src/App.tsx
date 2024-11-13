@@ -9,7 +9,7 @@ export interface WeaponItem {
   name: string;
   itemType: string;
   hasIcon: boolean;
-  icon: string;
+  iconURL: string;
   elementType: string;
   tier: string;
   // Add other properties if needed, like itemType, icon, etc.
