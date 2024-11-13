@@ -2,8 +2,9 @@ import { response, type Express, type Request, type Response } from "express";
 import path from "path";
 import fs from "fs/promises";
 import AdmZip from "adm-zip";
-import { drizzle } from "drizzle-orm/libsql";
+import { drizzle, LibSQLDatabase } from "drizzle-orm/libsql";
 import { destinyInventoryItemDefinition } from "./database/schema";
+import { Client } from "@libsql/client/.";
 // import sqlite3 from "sqlite3";
 
 const express = require("express");
@@ -130,8 +131,11 @@ async function getManifestURL() {
   return manifestUrl;
 }
 
-async function parseItemData() {
-  const db = drizzle("file:" + process.env.DB_FILE_NAME!);
+async function parseItemData(
+  db: LibSQLDatabase<Record<string, never>> & {
+    $client: Client;
+  }
+) {
   const data = await db.select().from(destinyInventoryItemDefinition);
 
   for (let i = 0; i < data.length; ++i) {
@@ -160,6 +164,8 @@ async function parseItemData() {
     }
   }
 }
+
+// get Item data we parsed earlier -- Weapons
 app.get("/item_data", async (req: Request, res: Response) => {
   res.json(WEAPON_ITEMS);
 });
@@ -171,8 +177,10 @@ app.listen(port, async () => {
   // download manifest
   await downloadAndOpenManifest(manifestUrl);
 
+  // open db
+  const db = drizzle("file:" + process.env.DB_FILE_NAME!);
   // parse item data out of db -- filter out unneccesary data and remove items not used in the game
-  await parseItemData();
+  await parseItemData(db);
 
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
