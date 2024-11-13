@@ -2,6 +2,8 @@ import { response, type Express, type Request, type Response } from "express";
 import path from "path";
 import fs from "fs/promises";
 import AdmZip from "adm-zip";
+import { drizzle } from "drizzle-orm/libsql";
+import { destinyInventoryItemDefinition } from "./database/schema";
 // import sqlite3 from "sqlite3";
 
 const express = require("express");
@@ -19,6 +21,27 @@ app.use(cors());
 const BUNGIE_API_KEY = process.env.BUNGIE_API_KEY;
 const BUNGIE_MANIFEST_API_ENDPOINT = process.env.BUNGIE_MANIFEST_API_ENDPOINT;
 const DB_FILE_NAME = process.env.DB_FILE_NAME!;
+
+const WEAPON_TYPES = new Set([
+  "Fusion Rifle",
+  "Sniper Rifle",
+  "Sidearm",
+  "Hand Cannon",
+  "Trace Rifle",
+  "Shotgun",
+  "Pulse Rifle",
+  "Rocket Launcher",
+  "Sword",
+  "Glaive",
+  "Auto Rifle",
+  "Grenade Launcher",
+  "Machine Gun",
+  "Submachine Gun",
+  "Combat Bow",
+  "Scout Rifle",
+]);
+
+const WEAPON_ITEMS: any[] = []; // This will store the weapon items
 
 async function downloadAndOpenManifest(manifestUrl: string) {
   // Step 1: fetch the manifest
@@ -97,12 +120,43 @@ async function getManifestURL() {
   return manifestUrl;
 }
 
+async function parseItemData() {
+  const db = drizzle("file:" + process.env.DB_FILE_NAME!);
+  const data = await db.select().from(destinyInventoryItemDefinition);
+
+  for (let i = 0; i < data.length; ++i) {
+    const json = JSON.parse(data[i].json as string);
+    if (json?.itemTypeDisplayName) {
+      const itemType: string = json.itemTypeDisplayName;
+      if (WEAPON_TYPES.has(itemType)) {
+        const name: string = json.displayProperties.name;
+        const iconUrl: string =
+          "https://www.bungie.net/" + json.displayProperties.icon;
+        const hasIcon: boolean = json.displayProperties.hasIcon;
+
+        WEAPON_ITEMS.push({
+          name,
+          itemType,
+          hasIcon,
+          icon: iconUrl,
+        });
+      }
+    }
+  }
+}
+app.get("/item_data", async (req: Request, res: Response) => {
+  res.json(WEAPON_ITEMS);
+});
+
 app.listen(port, async () => {
   // get manifest URL
   const manifestUrl = await getManifestURL();
 
   // download manifest
   await downloadAndOpenManifest(manifestUrl);
+
+  // parse item data out of db -- filter out unneccesary data and remove items not used in the game
+  await parseItemData();
 
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
