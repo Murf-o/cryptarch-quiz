@@ -35,7 +35,7 @@ const autocompleteStyle = {
     borderColor: "#ffffff", // Outline color on hover
   },
   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-    borderColor: "#ffffff", // Outline color when focused
+    borderColor: "white", // Outline color when focused
   },
   "& .MuiFormLabel-root": {
     color: "#bdbdbd", // Label color
@@ -59,6 +59,13 @@ function ItemSearchModal({
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box sx={style}>
+        <Typography
+          variant="h6"
+          color="white"
+          sx={{ marginBottom: 2, textAlign: "center" }}
+        >
+          Make your guess
+        </Typography>
         <Autocomplete
           sx={autocompleteStyle}
           options={weaponItems}

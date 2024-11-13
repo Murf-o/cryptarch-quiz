@@ -12,7 +12,10 @@ const pages = ["Daily Puzzle"];
 
 function HomeNavbar(): React.ReactNode {
   return (
-    <AppBar position="fixed" sx={{ width: "100%", height: "64px" }}>
+    <AppBar
+      position="fixed"
+      sx={{ width: "100%", height: "64px", backgroundColor: "#B0B0B0 " }}
+    >
       <Container>
         <Toolbar disableGutters>
           <Box
@@ -20,9 +23,9 @@ function HomeNavbar(): React.ReactNode {
             src="/destiny_ghost_sketch.png"
             alt="CryptArch Quiz Logo"
             sx={{
-              height: "auto", // Adjust as needed
-              width: 80, // Adjust as needed
-              mr: 1, // Adds some spacing between the image and text
+              height: "auto",
+              width: 80,
+              mr: 2, // Adds some spacing between the image and text
             }}
           />
           <Typography
@@ -36,7 +39,7 @@ function HomeNavbar(): React.ReactNode {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "black",
               textDecoration: "none",
             }}
           >
@@ -46,7 +49,7 @@ function HomeNavbar(): React.ReactNode {
             {pages.map((page) => (
               <Button
                 key={page}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, color: "black", display: "block" }}
               >
                 {page}
               </Button>
