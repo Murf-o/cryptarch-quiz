@@ -60,7 +60,6 @@ function ItemSearchModal({
     <Modal open={isOpen} onClose={onClose}>
       <Box sx={style}>
         <Autocomplete
-          open={true}
           sx={autocompleteStyle}
           options={weaponItems}
           getOptionLabel={(option) => option.name} // Display the name as the label
@@ -76,11 +75,12 @@ function ItemSearchModal({
           }
           renderInput={(params) => <TextField {...params} label="Search" />}
           renderOption={(props, option) => {
-            const newProps = { ...props, key: option.id };
+            const { key, ...restProps } = props; // Destructure to remove the key
             return (
               <Box
                 component="li"
-                {...newProps}
+                key={key}
+                {...restProps}
                 sx={{
                   display: "flex",
                   alignItems: "center",
