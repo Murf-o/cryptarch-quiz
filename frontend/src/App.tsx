@@ -6,6 +6,7 @@ const NUM_ROWS = 3;
 const NUM_COLS = 3;
 
 export interface WeaponItem {
+  id: number;
   name: string;
   itemType: string;
   hasIcon: boolean;

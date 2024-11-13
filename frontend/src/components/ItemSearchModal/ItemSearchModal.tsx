@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Modal, TextField } from "@mui/material";
+import { Autocomplete, Box, Modal, TextField, Typography } from "@mui/material";
 import { WeaponItem } from "../../App";
 
 const style = {
@@ -60,6 +60,7 @@ function ItemSearchModal({
     <Modal open={isOpen} onClose={onClose}>
       <Box sx={style}>
         <Autocomplete
+          open={true}
           sx={autocompleteStyle}
           options={weaponItems}
           getOptionLabel={(option) => option.name} // Display the name as the label
@@ -74,20 +75,33 @@ function ItemSearchModal({
                 .slice(0, 10) // Only show top 10 matching options
           }
           renderInput={(params) => <TextField {...params} label="Search" />}
-          renderOption={(props, option) => (
-            <Box
-              component="li"
-              {...props}
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              <img
-                src={option.iconURL}
-                alt={option.name}
-                style={{ width: 40, height: 40, marginRight: 16 }}
-              />
-              {option.name}
-            </Box>
-          )}
+          renderOption={(props, option) => {
+            const newProps = { ...props, key: option.id };
+            return (
+              <Box
+                component="li"
+                {...newProps}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  backgroundColor: "black",
+                  "&.MuiAutocomplete-option:hover, &.MuiAutocomplete-option.Mui-focused":
+                    {
+                      backgroundColor: "grey", // color change on hover and when out of focus and no other dropdown item in focus
+                    },
+                }}
+              >
+                <img
+                  src={option.iconURL}
+                  alt={option.name}
+                  style={{ width: 40, height: 40, marginRight: 16 }}
+                />
+                <Typography variant="body1" color="white">
+                  {option.name}
+                </Typography>
+              </Box>
+            );
+          }}
         />
       </Box>
     </Modal>

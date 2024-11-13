@@ -152,6 +152,7 @@ async function parseItemData(
         // Map damageType to an elementType (like "Solar", "Arc", etc.)
         const elementType: string = DAMAGE_TYPE_MAP[damageType] || "Unknown";
         WEAPON_ITEMS.push({
+          id: data[i].id,
           name,
           itemType,
           tier,
