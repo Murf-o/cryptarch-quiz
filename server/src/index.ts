@@ -41,6 +41,17 @@ const WEAPON_TYPES = new Set([
   "Scout Rifle",
 ]);
 
+const DAMAGE_TYPE_MAP: { [key: number]: string } = {
+  0: "Kinetic", // Not official, but some weapons still have a damage type of 0 and are kinetic
+  1: "Kinetic", // Kinetic -- officially marked in DestinyDamageTypeDefinition
+  2: "Arc",
+  3: "Solar",
+  4: "Void",
+  5: "Raid", // This is a special damage type reserved for some raid activity encounters -- no weapons have it as defaultDamageType 11/12/2024
+  6: "Stasis",
+  7: "Strand",
+};
+
 const WEAPON_ITEMS: any[] = []; // This will store the weapon items
 
 async function downloadAndOpenManifest(manifestUrl: string) {
@@ -116,7 +127,6 @@ async function getManifestURL() {
   const manifestUrl: string = await resp
     .json()
     .then((response) => response.Response.mobileWorldContentPaths.en);
-
   return manifestUrl;
 }
 
@@ -133,10 +143,16 @@ async function parseItemData() {
         const iconUrl: string =
           "https://www.bungie.net/" + json.displayProperties.icon;
         const hasIcon: boolean = json.displayProperties.hasIcon;
-
+        const tier: string = json.inventory.tierTypeName;
+        const damageType: number = json.defaultDamageType;
+        // Map damageType to an elementType (like "Solar", "Arc", etc.)
+        const elementType: string = DAMAGE_TYPE_MAP[damageType] || "Unknown";
         WEAPON_ITEMS.push({
           name,
           itemType,
+          tier,
+          elementType,
+          // damageType,
           hasIcon,
           icon: iconUrl,
         });
