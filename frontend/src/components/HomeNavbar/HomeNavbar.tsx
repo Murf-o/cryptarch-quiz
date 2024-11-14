@@ -17,6 +17,8 @@ function HomeNavbar(): React.ReactNode {
   const auth = useAuth();
   const userLoggedIn = auth?.userLoggedIn;
   const currentUser = auth?.currentUser;
+  const displayName =
+    currentUser?.displayName ?? currentUser?.email?.split("@")[0];
 
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -156,7 +158,7 @@ function HomeNavbar(): React.ReactNode {
                     textTransform: "none",
                   }}
                 >
-                  Welcome {currentUser?.displayName || "Back"}!
+                  Welcome {displayName}!
                 </Typography>
                 <Button
                   onClick={handleLogout} // Logout handler
