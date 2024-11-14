@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -7,7 +8,6 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { auth } from "./firebase";
-import { GoogleAuthProvider } from "firebase/auth/web-extension";
 
 export const doCreateUserWithEmailAndPassword = async (
   email: string,
@@ -25,14 +25,16 @@ export const doSignInWithEmailAndPassword = async (
 
 export const doSignInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
-  const result = await signInWithPopup(auth, provider);
-  const credential = GoogleAuthProvider.credentialFromResult(result);
-  if (!credential) return result;
+  // provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+  // auth.useDeviceLanguage();
+  await signInWithPopup(auth, provider);
+
+  // const credential = GoogleAuthProvider.credentialFromResult(result);
+  // if (!credential) return result;
 
   // const token = credential.accessToken;
   // The signed-in user info.
   // const user = result.user;
-  return result;
 };
 
 export const doSignOut = () => {
