@@ -26,6 +26,9 @@ function Board({
               sx={{
                 width: "100%",
                 height: "170px",
+                color: "black",
+                borderColor: "black",
+                borderWidth: "4px",
               }}
             ></Button>
           </Grid2>
