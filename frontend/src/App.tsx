@@ -8,6 +8,8 @@ import {
 } from "react-router-dom";
 import PuzzlePage from "./pages/PuzzlePage";
 import HomeNavbar from "./components/HomeNavbar";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 // USed so that the redirect to the /puzzle route works
 function LayoutWrapper() {
@@ -27,6 +29,8 @@ const router = createBrowserRouter(
       <Route index element={<Navigate to="/puzzle" replace />} />{" "}
       {/* Redirect root to /puzzle */}
       <Route path="puzzle" element={<PuzzlePage />} />
+      <Route path="login" element={<LoginPage />} />
+      <Route path="register" element={<RegisterPage />} />
     </Route>
   )
 );
