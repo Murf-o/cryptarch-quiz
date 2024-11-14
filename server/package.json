@@ -19,7 +19,6 @@
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.26.2",
     "drizzle-orm": "^0.35.3",
-    "drizzle-orm-sqlite": "^0.16.1",
     "express": "^4.21.1",
     "sqlite3": "^5.1.7"
   },

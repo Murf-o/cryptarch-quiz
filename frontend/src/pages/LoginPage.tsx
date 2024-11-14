@@ -2,7 +2,7 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { doSignInWithEmailAndPassword } from "../firebase/auth";
 import { useAuth } from "../contexts/authContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 
 function LoginPage() {
@@ -11,14 +11,14 @@ function LoginPage() {
   const [error, setError] = useState("");
 
   const userLoggedIn = useAuth()?.userLoggedIn;
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     try {
       await doSignInWithEmailAndPassword(email, password);
-      setEmail("");
-      setPassword("");
+      navigate("/puzzle");
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {
         setError(err.message); // might need to remove if it reveals too much
