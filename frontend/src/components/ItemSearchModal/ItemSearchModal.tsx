@@ -1,5 +1,5 @@
 import { Autocomplete, Box, Modal, TextField, Typography } from "@mui/material";
-import { WeaponItem } from "../../App";
+import { WeaponItem } from "../../pages/PuzzlePage";
 
 const style = {
   position: "absolute",

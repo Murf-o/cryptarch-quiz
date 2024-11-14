@@ -1,7 +1,7 @@
 import { Button, Grid2 } from "@mui/material";
 import React, { useState } from "react";
 import ItemSearchModal from "../ItemSearchModal";
-import { WeaponItem } from "../../App";
+import { WeaponItem } from "../../pages/PuzzlePage";
 
 interface BoardProps {
   num_rows: number;
