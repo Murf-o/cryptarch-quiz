@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Board from "../components/Board";
-import HomeNavbar from "../components/HomeNavbar";
 import { CircularProgress } from "@mui/material";
 
 const NUM_ROWS = 3;
@@ -21,7 +20,6 @@ const ITEMS_API = "http://localhost:8000/item_data";
 function PuzzlePage() {
   const [weaponItems, setWeaponItems] = useState<WeaponItem[]>([]);
   const [loading, setLoading] = useState(true);
-  console.log("hello");
 
   useEffect(() => {
     // Define the async function inside useEffect
@@ -58,8 +56,6 @@ function PuzzlePage() {
           display: "flex",
         }}
       >
-        {/* navbar thing -- sign-up/login and all that */}
-        <HomeNavbar />
         <div
           style={{
             width: "100%",

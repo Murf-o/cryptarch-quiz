@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { FirebaseError } from "firebase/app";
 import { TextField, Button, Typography, Box } from "@mui/material";
-import { doCreateUserWithEmailAndPassword } from "../firebase/auth";
+import {
+  doCreateUserWithEmailAndPassword,
+  doSignInWithGoogle,
+} from "../firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -9,14 +13,15 @@ const RegisterPage: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
 
+  const navigate = useNavigate();
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     try {
       await doCreateUserWithEmailAndPassword(email, password);
       setSuccess("User registered successfully!");
-      setEmail("");
-      setPassword("");
+      navigate("/login");
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {
         setError(err.message); // might need to remove if it reveals too much
@@ -58,6 +63,15 @@ const RegisterPage: React.FC = () => {
       {success && <Typography color="primary">{success}</Typography>}
       <Button type="submit" variant="contained" color="primary">
         Register
+      </Button>
+      <Button
+        variant="contained"
+        color="secondary"
+        fullWidth
+        onClick={doSignInWithGoogle}
+        sx={{ mt: 2 }}
+      >
+        Register with Google
       </Button>
     </Box>
   );

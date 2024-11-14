@@ -15,7 +15,7 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-export function AuthProvider(children: []) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);

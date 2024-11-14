@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext";
 import { doSignOut } from "../../firebase/auth";
 
@@ -17,6 +17,18 @@ function HomeNavbar(): React.ReactNode {
   const auth = useAuth();
   const userLoggedIn = auth?.userLoggedIn;
   const currentUser = auth?.currentUser;
+
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    doSignOut()
+      .then(() => {
+        // Sign-out successful.
+        navigate("/");
+      })
+      .catch(() => {
+        // An error happened.
+      });
+  };
 
   return (
     <AppBar
@@ -144,10 +156,10 @@ function HomeNavbar(): React.ReactNode {
                     textTransform: "none",
                   }}
                 >
-                  Welcome, {currentUser?.displayName || "User"}!
+                  Welcome {currentUser?.displayName || "Back"}!
                 </Typography>
                 <Button
-                  onClick={doSignOut} // Logout handler
+                  onClick={handleLogout} // Logout handler
                   sx={{
                     my: 2,
                     color: "#fff", // White text color
