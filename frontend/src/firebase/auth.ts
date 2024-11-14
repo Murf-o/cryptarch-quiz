@@ -48,6 +48,6 @@ export const doSendEmailVerification = () => {
   if (!auth.currentUser)
     return Promise.reject("No user is currently signed in.");
   return sendEmailVerification(auth.currentUser, {
-    url: `${window.location.origin}/home`,
+    url: `${window.location.origin}/puzzle`,
   });
 };
