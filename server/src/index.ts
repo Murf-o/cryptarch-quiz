@@ -5,6 +5,7 @@ import AdmZip from "adm-zip";
 import { drizzle, LibSQLDatabase } from "drizzle-orm/libsql";
 import { destinyInventoryItemDefinition } from "./database/schema";
 import { Client } from "@libsql/client/.";
+import { error } from "console";
 // import sqlite3 from "sqlite3";
 
 const express = require("express");
@@ -115,20 +116,40 @@ async function getManifestURL() {
   if (!BUNGIE_MANIFEST_API_ENDPOINT)
     throw new Error("BUNGIE MANIFEST API ENDPOINT undefined");
 
-  const resp = await fetch(BUNGIE_MANIFEST_API_ENDPOINT, {
-    method: "GET",
-    headers: {
-      "x-api-key": BUNGIE_API_KEY,
-    },
-  });
+  // Helper function to add delay (throttling)
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
-  if (!resp.ok)
-    throw new Error(`Failed to fetch bungie API: ${resp.statusText}`);
+  const maxRetries = 3;
+  let attempt = 0;
 
-  const manifestUrl: string = await resp
-    .json()
-    .then((response) => response.Response.mobileWorldContentPaths.en);
-  return manifestUrl;
+  while (attempt < maxRetries) {
+    try {
+      const resp = await fetch(BUNGIE_MANIFEST_API_ENDPOINT, {
+        method: "GET",
+        headers: {
+          "x-api-key": BUNGIE_API_KEY,
+        },
+      });
+
+      if (!resp.ok) {
+        throw new Error(`Failed to fetch bungie API: ${resp.statusText}`);
+      }
+
+      const manifestUrl: string = await resp
+        .json()
+        .then((response) => response.Response.mobileWorldContentPaths.en);
+      return manifestUrl;
+    } catch (error) {
+      attempt++;
+      if (attempt == maxRetries) {
+        break;
+      }
+      console.log(`Fetch attempt ${attempt} failed. Retrying...`);
+      await delay(2000); // Wait 2 seconds before retrying
+    }
+  }
+  throw new Error(`Failed to fetch bungie API after ${maxRetries} attempts`);
 }
 
 async function parseItemData(
