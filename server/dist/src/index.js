@@ -112,18 +112,36 @@ function getManifestURL() {
             throw new Error("BUNGIE API KEY undefined");
         if (!BUNGIE_MANIFEST_API_ENDPOINT)
             throw new Error("BUNGIE MANIFEST API ENDPOINT undefined");
-        const resp = yield fetch(BUNGIE_MANIFEST_API_ENDPOINT, {
-            method: "GET",
-            headers: {
-                "x-api-key": BUNGIE_API_KEY,
-            },
-        });
-        if (!resp.ok)
-            throw new Error(`Failed to fetch bungie API: ${resp.statusText}`);
-        const manifestUrl = yield resp
-            .json()
-            .then((response) => response.Response.mobileWorldContentPaths.en);
-        return manifestUrl;
+        // Helper function to add delay (throttling)
+        const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+        const maxRetries = 3;
+        let attempt = 0;
+        while (attempt < maxRetries) {
+            try {
+                const resp = yield fetch(BUNGIE_MANIFEST_API_ENDPOINT, {
+                    method: "GET",
+                    headers: {
+                        "x-api-key": BUNGIE_API_KEY,
+                    },
+                });
+                if (!resp.ok) {
+                    throw new Error(`Failed to fetch bungie API: ${resp.statusText}`);
+                }
+                const manifestUrl = yield resp
+                    .json()
+                    .then((response) => response.Response.mobileWorldContentPaths.en);
+                return manifestUrl;
+            }
+            catch (error) {
+                attempt++;
+                if (attempt == maxRetries) {
+                    break;
+                }
+                console.log(`Fetch attempt ${attempt} failed. Retrying...`);
+                yield delay(2000); // Wait 2 seconds before retrying
+            }
+        }
+        throw new Error(`Failed to fetch bungie API after ${maxRetries} attempts`);
     });
 }
 function parseItemData(db) {
@@ -171,7 +189,7 @@ app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
     yield parseItemData(db);
     console.log(`[server]: Server is running at http://localhost:${port}`);
 }));
-const FRONTEND_PROD_BUILD_PATH = "../../../frontend/dist";
+const FRONTEND_PROD_BUILD_PATH = "../../frontend/dist";
 app.use(express.static(path_1.default.join(__dirname, FRONTEND_PROD_BUILD_PATH)));
 app.get("/*", (req, res) => {
     res.sendFile(path_1.default.join(__dirname, FRONTEND_PROD_BUILD_PATH, "index.html"));
