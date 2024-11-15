@@ -5,7 +5,6 @@ import AdmZip from "adm-zip";
 import { drizzle, LibSQLDatabase } from "drizzle-orm/libsql";
 import { destinyInventoryItemDefinition } from "./database/schema";
 import { Client } from "@libsql/client/.";
-import { error } from "console";
 // import sqlite3 from "sqlite3";
 
 const express = require("express");
