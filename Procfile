@@ -1,1 +1,1 @@
-web: npm start --prefix server
+web: cd server/dist/src && node index.js
