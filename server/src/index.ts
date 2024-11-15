@@ -185,3 +185,11 @@ app.listen(port, async () => {
 
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
+
+const FRONTEND_PROD_BUILD_PATH = "../../../frontend/dist";
+
+app.use(express.static(path.join(__dirname, FRONTEND_PROD_BUILD_PATH)));
+
+app.get("/*", (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, FRONTEND_PROD_BUILD_PATH, "index.html"));
+});
