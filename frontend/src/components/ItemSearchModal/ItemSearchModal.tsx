@@ -49,13 +49,20 @@ interface ItemSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   weaponItems: WeaponItem[];
+  onItemSelect: (item: WeaponItem) => void;
 }
 
 function ItemSearchModal({
   isOpen,
   onClose,
   weaponItems,
+  onItemSelect,
 }: ItemSearchModalProps): React.ReactNode {
+  const handleItemSelect = (item: WeaponItem | null) => {
+    onItemSelect(item as WeaponItem);
+    onClose();
+  }
+
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box sx={style}>
@@ -97,6 +104,7 @@ function ItemSearchModal({
                       backgroundColor: "grey", // color change on hover and when out of focus and no other dropdown item in focus
                     },
                 }}
+                onClick={() => handleItemSelect(option)}
               >
                 <img
                   src={option.iconURL}
