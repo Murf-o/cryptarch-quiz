@@ -11,6 +11,6 @@
     "install-frontend": "cd frontend && npm install && npm run build && cd ..",
     "build": "tsc",
     "install-server": "cd server && npm install && npm run build && cd .. ",
-    "heroku-postbuild": "npm run nuild && npm run install-server"
+    "heroku-postbuild": "npm run build && npm run install-server"
   }
 }
