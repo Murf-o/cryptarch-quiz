@@ -45,8 +45,9 @@ function Board({
     setAnswers(updated);
 
     if (
-      item.itemType === rowLabels[selectedRow!] &&
-      item.tier === colLabels[selectedCol!]
+      item.itemType === rowLabels[selectedRow] &&
+      (item.tier === colLabels[selectedCol] ||
+        item.elementType === colLabels[selectedCol])
     ) {
       setScore((prev) => prev + 100);
       setItemSelectMessage("Matches! +100 points");
