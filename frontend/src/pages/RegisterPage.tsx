@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { FirebaseError } from "firebase/app";
 import { TextField, Button, Typography, Box } from "@mui/material";
-import { doCreateUserWithEmailAndPassword } from "../firebase/auth";
+import {
+  doCreateUserWithEmailAndPassword,
+  // doSendEmailVerification,
+} from "../firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 const RegisterPage: React.FC = () => {
@@ -20,6 +23,7 @@ const RegisterPage: React.FC = () => {
       setIsRegistering(true);
       await doCreateUserWithEmailAndPassword(email, password);
       setSuccess("User registered successfully!");
+      // await doSendEmailVerification();
       navigate("/login");
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {

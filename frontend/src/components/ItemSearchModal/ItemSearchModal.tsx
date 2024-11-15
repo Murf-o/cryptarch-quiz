@@ -82,11 +82,12 @@ function ItemSearchModal({
           }
           renderInput={(params) => <TextField {...params} label="Search" />}
           renderOption={(props, option) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { key, ...restProps } = props; // Destructure to remove the key
             return (
               <Box
                 component="li"
-                key={key}
+                key={option.id}
                 {...restProps}
                 sx={{
                   display: "flex",
