@@ -20,7 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-const BUNGIE_API_KEY = process.env.BUNGIE_API_KEY;
+const BUNGIE_API_KEY =
+  process.env.BUNGIE_API_KEY ?? "65cb0ca42ffd4995808cf1c74cd1aeb8";
 const BUNGIE_MANIFEST_API_ENDPOINT = process.env.BUNGIE_MANIFEST_API_ENDPOINT;
 const DB_FILE_NAME = process.env.DB_FILE_NAME!;
 

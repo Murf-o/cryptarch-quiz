@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const promises_1 = __importDefault(require("fs/promises"));
@@ -27,7 +28,7 @@ const port = process.env.PORT || 8000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-const BUNGIE_API_KEY = process.env.BUNGIE_API_KEY;
+const BUNGIE_API_KEY = (_a = process.env.BUNGIE_API_KEY) !== null && _a !== void 0 ? _a : "65cb0ca42ffd4995808cf1c74cd1aeb8";
 const BUNGIE_MANIFEST_API_ENDPOINT = process.env.BUNGIE_MANIFEST_API_ENDPOINT;
 const DB_FILE_NAME = process.env.DB_FILE_NAME;
 const WEAPON_TYPES = new Set([
