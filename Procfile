@@ -1,1 +1,1 @@
-web: cd server && npm i && npm run build && npm start
+web: npm start --prefix server
