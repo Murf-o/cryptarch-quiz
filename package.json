@@ -2,10 +2,15 @@
   "name": "cryptarch-quiz",
   "version": "1.0.0",
   "main": "",
+  "engines": {
+    "node": "20.x",
+    "npm": "10.x"
+  },
   "scripts": {
     "start": "npm start --prefix server",
     "install-frontend": "cd frontend && npm install && npm run build && cd ..",
-    "install-server": "cd server && npm install && npm i typescript && npm run build && cd .. ",
-    "heroku-postbuild": "npm run install-server"
+    "build": "tsc",
+    "install-server": "cd server && npm install && npm run build && cd .. ",
+    "heroku-postbuild": "npm run nuild && npm run install-server"
   }
 }
