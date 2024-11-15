@@ -17,6 +17,9 @@ function HomeNavbar(): React.ReactNode {
   const auth = useAuth();
   const userLoggedIn = auth?.userLoggedIn;
   const currentUser = auth?.currentUser;
+  const displayName =
+    currentUser?.displayName ?? currentUser?.email?.split("@")[0];
+  const profilePictureURL = currentUser?.photoURL ?? null;
 
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -98,31 +101,10 @@ function HomeNavbar(): React.ReactNode {
             ))}
           </Box>
 
-          {/* Register and Login buttons */}
+          {/*Login buttons */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {!userLoggedIn ? (
               <>
-                <Button
-                  component={Link}
-                  variant="outlined"
-                  to="/register" // Link to the Register page
-                  sx={{
-                    my: 2,
-                    color: "#fff", // White text color
-                    display: "block",
-                    mr: 2,
-                    backgroundColor: "#3f51b5", // Blue background
-                    padding: "8px 20px", // Padding for a better size
-                    fontWeight: 600, // Bold text
-                    textTransform: "none", // Prevent text transformation
-                    "&:hover": {
-                      backgroundColor: "#2c387e", // Darker shade on hover
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)", // Hover shadow effect
-                    },
-                  }}
-                >
-                  Register
-                </Button>
                 <Button
                   component={Link}
                   variant="outlined"
@@ -132,7 +114,6 @@ function HomeNavbar(): React.ReactNode {
                     color: "#fff", // White text color
                     display: "block",
                     backgroundColor: "#00796b", // Teal background
-
                     padding: "8px 20px", // Padding for a better size
                     fontWeight: 600, // Bold text
                     textTransform: "none", // Prevent text transformation
@@ -156,8 +137,22 @@ function HomeNavbar(): React.ReactNode {
                     textTransform: "none",
                   }}
                 >
-                  Welcome {currentUser?.displayName || "Back"}!
+                  Welcome {displayName}!
                 </Typography>
+                {profilePictureURL && (
+                  <Box sx={{ display: "flex", alignItems: "center", mr: 2 }}>
+                    <img
+                      src={profilePictureURL}
+                      alt="Profile Pic"
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%", // Make the image circular
+                        marginRight: 8,
+                      }}
+                    />
+                  </Box>
+                )}
                 <Button
                   onClick={handleLogout} // Logout handler
                   sx={{

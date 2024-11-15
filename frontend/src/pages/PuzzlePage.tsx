@@ -102,7 +102,7 @@ function PuzzlePage() {
     <>
       <div
         style={{
-          backgroundColor: "black",
+          backgroundColor: "#2f4f4f",
           color: "white",
           height: "100vh",
           width: "100%",
