@@ -1,5 +1,12 @@
 # Cryptarch Quiz
 
+
+# How to Play
+You are presented with a 3x3 grid <br>
+Each square represents the intersection of a row and column, corresponding to an item that fits both categories (e.g., Legendary Sniper Rifle) <br >
+Your goal is to find and match the correct item for each square <br >
+Log in to save your progress and track your highest scores!
+
 # Tech Stack
 
 - Framework: React
