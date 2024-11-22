@@ -17,9 +17,11 @@ Log in to save your progress and track your highest scores!
 
 # How to Run:
  - npm run start <br>
+ 
 This will start up a docker container that builds the frontend/server and runs the app <br>
-Better to run through the server build steps first, as you need to create the db schema and relations. <br>
-In the future, we'll probably just make a script that downloads the db seperately, instead of doing it on server startup.
+Better to **run through the server build steps first**, as you need to create the db schema and relations. <br>
+After that, you can always just run this.
+In the future, we'll probably just make a script that downloads the db seperately -- and generates the schema/relations -- instead of doing it on server startup.
 
 You can also just run the server and frontend seperately
 # How to Run Frontend (Client)
