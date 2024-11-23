@@ -15,7 +15,7 @@ export interface WeaponItem {
   tier: string;
 }
 
-const ITEMS_API = "http://localhost:8000/item_data";
+const ITEMS_API = "/api/item_data";
 
 function selectRandom<T>(arr: T[], n: number): T[] {
   const shuffled = arr.sort(() => 0.5 - Math.random());
