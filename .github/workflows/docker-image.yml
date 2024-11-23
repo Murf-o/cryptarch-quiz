@@ -17,6 +17,6 @@ jobs:
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Build the Docker image
-      run: docker build -t cryptarch-quiz .
+      run: docker build -t Murfo/cryptarch-quiz .
     - name: Push to Dockerhub
       run: docker push Murfo/cryptarch-quiz:latest
