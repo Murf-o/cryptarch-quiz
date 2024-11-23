@@ -213,16 +213,3 @@ app.use(express.static(path.join(__dirname, FRONTEND_PROD_BUILD_PATH)));
 app.get("/*", (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, FRONTEND_PROD_BUILD_PATH, "index.html"));
 });
-
-const { createProxyMiddleware } = require("http-proxy-middleware");
-// Proxy API requests
-app.use(
-  "/api",
-  createProxyMiddleware({
-    target: "http://localhost:8000", // Your backend API server
-    changeOrigin: true,
-    pathRewrite: {
-      "^/api": "", // Remove '/api' prefix before forwarding
-    },
-  })
-);

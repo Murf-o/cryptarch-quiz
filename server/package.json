@@ -20,7 +20,6 @@
     "drizzle-kit": "^0.26.2",
     "drizzle-orm": "^0.35.3",
     "express": "^4.21.1",
-    "http-proxy-middleware": "^3.0.3",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
