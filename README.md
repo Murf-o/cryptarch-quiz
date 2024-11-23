@@ -38,3 +38,4 @@ Scripts: <br>
  -  **build**: compile typescript <br> 
  -  **start**: runs the compiled code
  -  **drizzle-kit**: once the db has been downloaded via the server, run this to generate our schema and relations files -- only will need to run if bungie changes the db
+
