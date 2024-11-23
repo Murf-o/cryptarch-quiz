@@ -19,4 +19,4 @@ jobs:
     - name: Build the Docker image
       run: docker build -t cryptarch-quiz .
     - name: Push to Dockerhub
-      run: docker push Murf-o/cryptarch-quiz:latest
+      run: docker push Murfo/cryptarch-quiz:latest
