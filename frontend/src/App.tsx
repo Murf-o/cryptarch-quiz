@@ -12,7 +12,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import { AuthProvider } from "./contexts/authContext";
 import ScoreboardPage from "./pages/ScoreboardPage";
-import { AuthRefreshProvider } from "./contexts/HomeNavbarContext";
+import { AuthRefreshProvider } from "./contexts/AuthRefreshContext";
 
 // USed so that the redirect to the /puzzle route works
 function LayoutWrapper() {

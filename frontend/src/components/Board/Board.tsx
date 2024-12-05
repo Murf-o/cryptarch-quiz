@@ -7,7 +7,7 @@ import {
   firestoreSaveUserScore,
 } from "../../firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
-import { useHomeNavbarRefreshContext } from "../../contexts/HomeNavbarContext";
+import { useAuthRefreshContext } from "../../contexts/AuthRefreshContext";
 
 interface BoardProps {
   num_rows: number;
@@ -36,7 +36,7 @@ const Board: React.FC<BoardProps> = ({
 
   const auth = useAuth();
 
-  const { triggerRefresh } = useHomeNavbarRefreshContext();
+  const { triggerAuthRefresh } = useAuthRefreshContext();
 
   const handleCellClick = (rowIndex: number, colIndex: number) => {
     setSelectedRow(rowIndex);
@@ -50,7 +50,6 @@ const Board: React.FC<BoardProps> = ({
     const updatedAnswers = [...answers];
     updatedAnswers[selectedRow][selectedCol] = item;
     setAnswers(updatedAnswers);
-    numAnswersCorrect.current += 1;
     if (
       item.itemType === rowLabels[selectedRow] &&
       (item.tier === colLabels[selectedCol] ||
@@ -58,6 +57,7 @@ const Board: React.FC<BoardProps> = ({
     ) {
       setScore((prev) => prev + 100);
       setItemSelectMessage("Matches! +100 points");
+      numAnswersCorrect.current += 1;
     } else {
       setItemSelectMessage("Incorrect!");
     }
@@ -77,7 +77,7 @@ const Board: React.FC<BoardProps> = ({
           numAnswersCorrect.current === num_rows * num_cols
         ) {
           await firestoreIncrementPuzzlesSolved(); // Make sure to wait for the async operation
-          triggerRefresh();
+          triggerAuthRefresh();
         }
       }
     };

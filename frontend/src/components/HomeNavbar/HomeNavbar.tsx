@@ -11,10 +11,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext";
 import { doSignOut } from "../../firebase/auth";
-import { firestoreGetUserInfo } from "../../firebase/firestore";
 import { Settings } from "@mui/icons-material";
 import UserSettingsModal from "../UserSettingsModal";
-import { useHomeNavbarRefreshContext } from "../../contexts/HomeNavbarContext";
 
 const pages = [
   { displayName: "Puzzles", url: "puzzle" },
@@ -46,18 +44,18 @@ function HomeNavbar(): React.ReactNode {
   };
 
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const { triggerRefresh } = useHomeNavbarRefreshContext(); // Get triggerRefresh from context
+
   useEffect(() => {
     const fetchPuzzlesSolved = async () => {
       if (auth?.currentUser?.email) {
-        const userInfo = await firestoreGetUserInfo();
-        setPuzzlesSolved(userInfo.puzzlesSolved);
-        setDisplayName(userInfo.username);
+        // const userInfo = await firestoreGetUserInfo();
+        if (auth.puzzlesSolved) setPuzzlesSolved(auth.puzzlesSolved);
+        if (auth.username) setDisplayName(auth.username);
       }
     };
 
     fetchPuzzlesSolved();
-  }, [auth?.currentUser?.email, triggerRefresh]);
+  }, [auth?.currentUser?.email, auth?.username, auth?.puzzlesSolved]);
 
   return (
     <AppBar

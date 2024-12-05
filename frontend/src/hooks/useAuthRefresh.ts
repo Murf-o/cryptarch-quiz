@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/authContext";
-import { useHomeNavbarRefreshContext } from "../contexts/HomeNavbarContext";
+import { useAuthRefreshContext } from "../contexts/AuthRefreshContext";
 
-function useHomeNavbarRefresh() {
-  const { triggerRefresh } = useHomeNavbarRefreshContext();
+function useAuthRefresh() {
+  const { triggerAuthRefresh } = useAuthRefreshContext();
   const auth = useAuth();
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -12,9 +12,10 @@ function useHomeNavbarRefresh() {
       // Trigger a refresh whenever the context triggers it
       setRefreshKey((prevKey) => prevKey + 1);
     }
-  }, [triggerRefresh]); // Re-run when triggerRefresh changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [triggerAuthRefresh]); // Re-run when triggerRefresh changes
 
   return refreshKey;
 }
 
-export default useHomeNavbarRefresh;
+export default useAuthRefresh;

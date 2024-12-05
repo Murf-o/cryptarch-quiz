@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { firestoreSetUsername } from "../../firebase/firestore";
 import { getErrorMessage } from "../../utils/utils";
+import { useAuthRefreshContext } from "../../contexts/AuthRefreshContext";
 
 interface UserSettingsModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { triggerAuthRefresh } = useAuthRefreshContext();
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -48,6 +50,7 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({
       }
 
       await firestoreSetUsername(username);
+      triggerAuthRefresh();
       setUsername("");
       onClose();
     } catch (err) {
