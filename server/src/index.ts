@@ -5,7 +5,6 @@ import AdmZip from "adm-zip";
 import { drizzle, LibSQLDatabase } from "drizzle-orm/libsql";
 import { destinyInventoryItemDefinition } from "./database/schema";
 import { Client } from "@libsql/client/.";
-import { error } from "console";
 // import sqlite3 from "sqlite3";
 
 const express = require("express");
@@ -22,7 +21,7 @@ app.use(cors());
 
 const BUNGIE_API_KEY = process.env.BUNGIE_API_KEY;
 const BUNGIE_MANIFEST_API_ENDPOINT = process.env.BUNGIE_MANIFEST_API_ENDPOINT;
-const DB_FILE_NAME = process.env.DB_FILE_NAME!;
+const DB_FILE_NAME = process.env.DB_FILE_NAME!!;
 
 const WEAPON_TYPES = new Set([
   "Fusion Rifle",

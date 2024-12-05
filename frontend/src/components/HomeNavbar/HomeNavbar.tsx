@@ -6,10 +6,11 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext";
 import { doSignOut } from "../../firebase/auth";
+import { firestoreGetHighestUserScore } from "../../firebase/firestore";
 
 const pages = [{ displayName: "Puzzles", url: "puzzle" }];
 
@@ -33,10 +34,25 @@ function HomeNavbar(): React.ReactNode {
       });
   };
 
+  const [highestScore, setHighestScore] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchHighestScore = async () => {
+      if (auth?.currentUser?.email) {
+        const score = await firestoreGetHighestUserScore(
+          auth.currentUser.email
+        );
+        setHighestScore(score);
+      }
+    };
+
+    fetchHighestScore();
+  }, [auth?.currentUser?.email]);
+
   return (
     <AppBar
-      position="fixed"
-      sx={{ width: "100%", height: "64px", backgroundColor: "#B0B0B0 " }}
+      position="sticky"
+      sx={{ width: "100%", height: "64px", backgroundColor: "#B0B0B0" }}
     >
       <Container>
         <Toolbar disableGutters>
@@ -175,6 +191,21 @@ function HomeNavbar(): React.ReactNode {
               </>
             )}
           </Box>
+          {/* Score Display */}
+          {auth?.currentUser?.email && (
+            <Box sx={{ display: "flex", alignItems: "center", ml: 2 }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "#000",
+                  fontWeight: 600,
+                  textTransform: "none",
+                }}
+              >
+                HighScore: {highestScore}
+              </Typography>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

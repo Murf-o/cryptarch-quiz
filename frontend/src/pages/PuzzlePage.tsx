@@ -15,7 +15,7 @@ export interface WeaponItem {
   tier: string;
 }
 
-const ITEMS_API = "http://localhost:8000/item_data";
+const ITEMS_API = "/item_data";
 
 function selectRandom<T>(arr: T[], n: number): T[] {
   const shuffled = arr.sort(() => 0.5 - Math.random());
@@ -39,7 +39,7 @@ function generateRow(): string[] {
     "Machine Gun",
     "Submachine Gun",
     "Combat Bow",
-    "Scout Rifle"
+    "Scout Rifle",
   ]);
 
   const rows = selectRandom(Array.from(itemTypes), NUM_ROWS);
@@ -47,18 +47,15 @@ function generateRow(): string[] {
 }
 
 function generateColumn(): string[] {
-  const tiers = new Set<string>([
-    "Legendary",
-    "Exotic"
-  ]);
-  
+  const tiers = new Set<string>(["Legendary", "Exotic"]);
+
   const elements = new Set<string>([
     "Kinetic",
     "Arc",
     "Solar",
     "Void",
     "Stasis",
-    "Strand"
+    "Strand",
   ]);
 
   const combined = new Set<string>([...tiers, ...elements]);
@@ -69,8 +66,10 @@ function generateColumn(): string[] {
 function PuzzlePage() {
   const [weaponItems, setWeaponItems] = useState<WeaponItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [rowLabels, setRowLabels] = useState<string[]>([]);
-  const [colLabels, setColLabels] = useState<string[]>([]);
+  // const [rowLabels, setRowLabels] = useState<string[]>([]);
+  // const [colLabels, setColLabels] = useState<string[]>([]);
+  const rowLabels = generateRow();
+  const colLabels = generateColumn();
 
   useEffect(() => {
     // Define the async function inside useEffect
@@ -83,8 +82,8 @@ function PuzzlePage() {
         }
         const data = await response.json();
         setWeaponItems(data);
-        setRowLabels(generateRow());
-        setColLabels(generateColumn());
+        // setRowLabels(generateRow());
+        // setColLabels(generateColumn());
       } catch (error) {
         console.error("Failed to fetch weapon items:", error);
       } finally {
@@ -137,7 +136,8 @@ function PuzzlePage() {
             fontSize: "10px",
           }}
         >
-          © Bungie, Inc. All rights reserved. Destiny, the Destiny Logo, Bungie and the Bungie logo are among the trademarks of Bungie, Inc.
+          © Bungie, Inc. All rights reserved. Destiny, the Destiny Logo, Bungie
+          and the Bungie logo are among the trademarks of Bungie, Inc.
         </footer>
       </div>
     </>
