@@ -11,7 +11,6 @@ const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
   const [isRegistering, setIsRegistering] = useState(false);
 
   const navigate = useNavigate();
@@ -22,7 +21,6 @@ const RegisterPage: React.FC = () => {
     try {
       setIsRegistering(true);
       await doCreateUserWithEmailAndPassword(email, password);
-      setSuccess("User registered successfully!");
       // await doSendEmailVerification();
       navigate("/login");
     } catch (err: unknown) {
@@ -140,7 +138,6 @@ const RegisterPage: React.FC = () => {
               {error}
             </Typography>
           )}
-          {success && <Typography color="primary">{success}</Typography>}
           {/* Submit Button */}
           <Button
             type="submit"
