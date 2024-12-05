@@ -12,6 +12,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import { AuthProvider } from "./contexts/authContext";
 import ScoreboardPage from "./pages/ScoreboardPage";
+import { AuthRefreshProvider } from "./contexts/HomeNavbarContext";
 
 // USed so that the redirect to the /puzzle route works
 function LayoutWrapper() {
@@ -41,9 +42,11 @@ const router = createBrowserRouter(
 function App() {
   return (
     <div>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <AuthRefreshProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </AuthRefreshProvider>
     </div>
   );
 }

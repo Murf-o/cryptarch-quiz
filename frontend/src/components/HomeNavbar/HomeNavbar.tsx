@@ -14,6 +14,7 @@ import { doSignOut } from "../../firebase/auth";
 import { firestoreGetUserInfo } from "../../firebase/firestore";
 import { Settings } from "@mui/icons-material";
 import UserSettingsModal from "../UserSettingsModal";
+import { useHomeNavbarRefreshContext } from "../../contexts/HomeNavbarContext";
 
 const pages = [
   { displayName: "Puzzles", url: "puzzle" },
@@ -26,8 +27,11 @@ function HomeNavbar(): React.ReactNode {
   const [displayName, setDisplayName] = useState(
     currentUser?.displayName ?? currentUser?.email?.split("@")[0]
   );
+  // const puzzlesSolved = auth?.puzzlesSolved;
 
   const profilePictureURL = currentUser?.photoURL ?? null;
+
+  const [puzzlesSolved, setPuzzlesSolved] = useState(0);
 
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -41,9 +45,8 @@ function HomeNavbar(): React.ReactNode {
       });
   };
 
-  const [puzzlesSolved, setPuzzlesSolved] = useState<number | null>(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-
+  const { triggerRefresh } = useHomeNavbarRefreshContext(); // Get triggerRefresh from context
   useEffect(() => {
     const fetchPuzzlesSolved = async () => {
       if (auth?.currentUser?.email) {
@@ -54,7 +57,7 @@ function HomeNavbar(): React.ReactNode {
     };
 
     fetchPuzzlesSolved();
-  }, [auth?.currentUser?.email]);
+  }, [auth?.currentUser?.email, triggerRefresh]);
 
   return (
     <AppBar

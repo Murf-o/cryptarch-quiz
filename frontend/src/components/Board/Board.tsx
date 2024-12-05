@@ -7,6 +7,7 @@ import {
   firestoreSaveUserScore,
 } from "../../firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
+import { useHomeNavbarRefreshContext } from "../../contexts/HomeNavbarContext";
 
 interface BoardProps {
   num_rows: number;
@@ -35,6 +36,8 @@ const Board: React.FC<BoardProps> = ({
 
   const auth = useAuth();
 
+  const { triggerRefresh } = useHomeNavbarRefreshContext();
+
   const handleCellClick = (rowIndex: number, colIndex: number) => {
     setSelectedRow(rowIndex);
     setSelectedCol(colIndex);
@@ -47,6 +50,7 @@ const Board: React.FC<BoardProps> = ({
     const updatedAnswers = [...answers];
     updatedAnswers[selectedRow][selectedCol] = item;
     setAnswers(updatedAnswers);
+    numAnswersCorrect.current += 1;
     if (
       item.itemType === rowLabels[selectedRow] &&
       (item.tier === colLabels[selectedCol] ||
@@ -54,7 +58,6 @@ const Board: React.FC<BoardProps> = ({
     ) {
       setScore((prev) => prev + 100);
       setItemSelectMessage("Matches! +100 points");
-      numAnswersCorrect.current += 1;
     } else {
       setItemSelectMessage("Incorrect!");
     }
@@ -64,17 +67,22 @@ const Board: React.FC<BoardProps> = ({
   const isGameFinished = answers.flat().every((cell) => cell !== null);
 
   useEffect(() => {
-    if (isGameFinished) {
-      if (auth?.currentUser?.email) {
-        firestoreSaveUserScore(score, auth.currentUser.email);
+    const incrementPuzzlesSolved = async () => {
+      if (isGameFinished) {
+        if (auth?.currentUser?.email) {
+          firestoreSaveUserScore(score, auth.currentUser.email);
+        }
+        if (
+          auth?.userLoggedIn &&
+          numAnswersCorrect.current === num_rows * num_cols
+        ) {
+          await firestoreIncrementPuzzlesSolved(); // Make sure to wait for the async operation
+          triggerRefresh();
+        }
       }
-      if (
-        auth?.userLoggedIn &&
-        numAnswersCorrect.current === num_rows * num_cols
-      ) {
-        firestoreIncrementPuzzlesSolved();
-      }
-    }
+    };
+
+    incrementPuzzlesSolved();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isGameFinished]);
 
