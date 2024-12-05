@@ -157,3 +157,35 @@ export const firestoreGetUserInfo = async () => {
   const doc = querySnapshot.docs[0];
   return doc.data(); // Return the data from the document
 };
+
+export const firestoreIncrementPuzzlesSolved = async () => {
+  if (!auth.currentUser?.email) {
+    throw new Error("Not authenticated");
+  }
+
+  const email = auth.currentUser.email;
+  const q = query(userInfoRef, where("email", "==", email));
+
+  const querySnapshot = await getDocs(q);
+
+  // if no user info exists
+  if (querySnapshot.empty) {
+    throw new Error("User Info does not exist");
+  }
+
+  const doc = querySnapshot.docs[0];
+  const data = doc.data();
+
+  if (!data || typeof data.puzzlesSolved !== "number") {
+    throw new Error(
+      "Invalid data format: puzzlesSolved is missing or not a number"
+    );
+  }
+
+  const currentPuzzlesSolved = data.puzzlesSolved;
+
+  // Increment puzzlesSolved
+  await updateDoc(doc.ref, {
+    puzzlesSolved: currentPuzzlesSolved + 1,
+  });
+};

@@ -1,8 +1,11 @@
 import { Button, Grid2, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ItemSearchModal from "../ItemSearchModal";
 import { WeaponItem } from "../../pages/PuzzlePage";
-import { firestoreSaveUserScore } from "../../firebase/firestore";
+import {
+  firestoreIncrementPuzzlesSolved,
+  firestoreSaveUserScore,
+} from "../../firebase/firestore";
 import { useAuth } from "../../contexts/authContext";
 
 interface BoardProps {
@@ -13,21 +16,22 @@ interface BoardProps {
   colLabels: string[];
 }
 
-function Board({
+const Board: React.FC<BoardProps> = ({
   num_rows,
   num_cols,
   weaponItems,
   rowLabels,
   colLabels,
-}: BoardProps): React.ReactNode {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
   const [selectedCol, setSelectedCol] = useState<number | null>(null);
   const [answers, setAnswers] = useState<WeaponItem[][]>(
-    Array.from(Array(num_rows), () => Array(num_cols).fill(null))
+    Array.from({ length: num_rows }, () => Array(num_cols).fill(null))
   );
   const [itemSelectMessage, setItemSelectMessage] = useState<string>("");
-  const [score, setScore] = useState<number>(0);
+  const [score, setScore] = useState(0);
+  const numAnswersCorrect = useRef(0);
 
   const auth = useAuth();
 
@@ -40,10 +44,9 @@ function Board({
   const handleItemSelect = (item: WeaponItem) => {
     if (selectedRow === null || selectedCol === null) return;
 
-    const updated = [...answers];
-    updated[selectedRow][selectedCol] = item;
-    setAnswers(updated);
-
+    const updatedAnswers = [...answers];
+    updatedAnswers[selectedRow][selectedCol] = item;
+    setAnswers(updatedAnswers);
     if (
       item.itemType === rowLabels[selectedRow] &&
       (item.tier === colLabels[selectedCol] ||
@@ -51,45 +54,55 @@ function Board({
     ) {
       setScore((prev) => prev + 100);
       setItemSelectMessage("Matches! +100 points");
+      numAnswersCorrect.current += 1;
     } else {
       setItemSelectMessage("Incorrect!");
     }
     setIsModalOpen(false);
   };
-  const isGameFinished = answers.flatMap((e) => e).every((e) => e !== null);
-  if (isGameFinished) {
-    if (auth?.currentUser?.email)
-      firestoreSaveUserScore(score, auth?.currentUser?.email);
-  }
+
+  const isGameFinished = answers.flat().every((cell) => cell !== null);
+
+  useEffect(() => {
+    if (isGameFinished) {
+      if (auth?.currentUser?.email) {
+        firestoreSaveUserScore(score, auth.currentUser.email);
+      }
+      if (
+        auth?.userLoggedIn &&
+        numAnswersCorrect.current === num_rows * num_cols
+      ) {
+        firestoreIncrementPuzzlesSolved();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isGameFinished]);
 
   return (
-    <div style={{ marginLeft: "-250px" }}>
+    <div style={{ marginLeft: "-250px", paddingBottom: "20px" }}>
       <Grid2 container spacing={1}>
-        <Grid2 size={12 / (num_cols + 1)}></Grid2>
+        {/* Column Labels */}
+        <Grid2 size={12 / (num_cols + 1)} />
         {colLabels.map((label, colIndex) => (
           <Grid2 size={12 / (num_cols + 1)} key={`col-label-${colIndex}`}>
-            <div style={{ textAlign: "center", fontFamily: "monospace" }}>
+            <Typography align="center" sx={{ fontFamily: "monospace" }}>
               {label}
-            </div>
+            </Typography>
           </Grid2>
         ))}
 
-        {Array.from(Array(num_rows)).map((_, rowIndex) => (
+        {/* Board Cells */}
+        {Array.from({ length: num_rows }).map((_, rowIndex) => (
           <React.Fragment key={`row-${rowIndex}`}>
             <Grid2 size={12 / (num_cols + 1)}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "right",
-                  height: "100%",
-                  fontFamily: "monospace",
-                }}
+              <Typography
+                align="right"
+                sx={{ fontFamily: "monospace", height: "100%" }}
               >
                 {rowLabels[rowIndex]}
-              </div>
+              </Typography>
             </Grid2>
-            {Array.from(Array(num_cols)).map((_, colIndex) => (
+            {Array.from({ length: num_cols }).map((_, colIndex) => (
               <Grid2
                 size={12 / (num_cols + 1)}
                 key={`cell-${rowIndex}-${colIndex}`}
@@ -98,11 +111,7 @@ function Board({
                   variant="outlined"
                   onClick={() => handleCellClick(rowIndex, colIndex)}
                   disabled={!!answers[rowIndex][colIndex]}
-                  sx={{
-                    width: "100%",
-                    height: "170px",
-                    padding: 0,
-                  }}
+                  sx={{ width: "100%", height: "170px", padding: 0 }}
                 >
                   {answers[rowIndex][colIndex] && (
                     <img
@@ -117,7 +126,8 @@ function Board({
           </React.Fragment>
         ))}
       </Grid2>
-      {/* Display the Score */}
+
+      {/* Score Display */}
       <Typography
         variant="h5"
         align="center"
@@ -125,7 +135,8 @@ function Board({
       >
         Score: {score}
       </Typography>
-      {/* Display the Item Select Message */}
+
+      {/* Item Select Message */}
       {itemSelectMessage && (
         <Typography
           variant="body1"
@@ -135,6 +146,8 @@ function Board({
           {itemSelectMessage}
         </Typography>
       )}
+
+      {/* Game Finished Message */}
       {isGameFinished && (
         <Typography
           variant="h5"
@@ -144,22 +157,27 @@ function Board({
             mt: 4,
             color: "white",
             ml: 22,
-            whiteSpace: "pre-line", // makes \n render as a new line
+            mb: 3,
+            whiteSpace: "pre-line",
           }}
         >
-          {`Game finished, with a score of ${score}!\n ${
-            auth?.currentUser ? "Score Saved." : "Login to save your scores!"
+          {`Game finished with a score of ${score}!\n${
+            auth?.currentUser ? "Score saved." : "Log in to save your score!"
           }`}
+          {numAnswersCorrect.current === num_rows * num_cols &&
+            "\nCongratulations! You got all answers correct!"}
         </Typography>
       )}
+
+      {/* Item Selection Modal */}
       <ItemSearchModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         weaponItems={weaponItems}
-        onItemSelect={(item) => handleItemSelect(item)}
+        onItemSelect={handleItemSelect}
       />
     </div>
   );
-}
+};
 
 export default Board;
