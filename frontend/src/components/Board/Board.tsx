@@ -147,6 +147,7 @@ const Board: React.FC<BoardProps> = ({
     };
 
     incrementPuzzlesSolved();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isGameFinished]);
 
   return (
