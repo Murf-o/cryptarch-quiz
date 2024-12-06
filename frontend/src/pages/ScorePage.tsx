@@ -10,10 +10,13 @@ import {
   Box,
   Card,
   CardContent,
+  Button,
 } from "@mui/material";
 
 function ScoresPage() {
-  const [scores, setScores] = useState<number[]>([]);
+  const [scores, setScores] = useState<{ score: number; puzzleId: string }[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const auth = useAuth();
   const currentUser = auth?.currentUser;
@@ -23,13 +26,14 @@ function ScoresPage() {
       if (currentUser?.email) {
         try {
           setLoading(true);
-          const userScores = await firestoreGetUserScores(currentUser.email);
-          let topTenScores: number[] = [];
-          if (userScores != null) {
-            userScores.sort((a, b) => b - a);
-            topTenScores = userScores.slice(0, 10);
-            setScores(topTenScores);
-          }
+          const userScoreDocs = await firestoreGetUserScores(currentUser.email);
+          const userScores = userScoreDocs.map((doc) => {
+            return { score: doc.data().score, puzzleId: doc.id };
+          });
+
+          userScores.sort((a, b) => b.score - a.score);
+          const topTenScores = userScores.slice(0, 10);
+          setScores(topTenScores);
         } catch (error) {
           console.error("Error fetching scores:", error);
         } finally {
@@ -44,6 +48,15 @@ function ScoresPage() {
   if (loading) {
     return <CircularProgress sx={{ color: "#fff" }} />;
   }
+
+  const handleCopyLink = (shareLinkId: string) => {
+    if (shareLinkId) {
+      const linkToCopy = `${window.location.origin}/share?id=${shareLinkId}`;
+      navigator.clipboard.writeText(linkToCopy).then(() => {
+        alert("Link copied to clipboard!");
+      });
+    }
+  };
 
   return (
     <div
@@ -83,7 +96,7 @@ function ScoresPage() {
           }}
         >
           <List>
-            {scores.map((score, index) => (
+            {scores.map((o, index) => (
               <ListItem
                 key={index}
                 sx={{
@@ -96,15 +109,38 @@ function ScoresPage() {
                   },
                 }}
               >
-                <Card sx={{ display: "flex", width: "100%" }}>
-                  <CardContent sx={{ flex: 1 }}>
+                <Card
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                  }}
+                >
+                  <CardContent
+                    sx={{
+                      flex: 1,
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <ListItemText
-                      primary={`#${index + 1} - Score: ${score}`}
+                      primary={`#${index + 1} - Score: ${o.score}`}
                       sx={{
                         fontWeight: 600,
                         color: "#333",
                       }}
                     />
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      sx={{
+                        marginLeft: 2,
+                        borderRadius: 2,
+                        height: "40px",
+                      }}
+                      onClick={() => handleCopyLink(o.puzzleId)}
+                    >
+                      Copy Link to Share
+                    </Button>
                   </CardContent>
                 </Card>
               </ListItem>
