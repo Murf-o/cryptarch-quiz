@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Container,
+  IconButton,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -10,17 +11,28 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext";
 import { doSignOut } from "../../firebase/auth";
+
 import { firestoreGetHighestUserScore } from "../../firebase/firestore";
+import { Settings } from "@mui/icons-material";
+import UserSettingsModal from "../UserSettingsModal";
 
-const pages = [{ displayName: "Puzzles", url: "puzzle" }, { displayName: "Scores", url: "scores" }];
-
+const pages = [
+  { displayName: "Puzzles", url: "puzzle" },
+  { displayName: "Scoreboard", url: "score-board" },
+  { displayName: "Scores", url: "scores" },
+];
 function HomeNavbar(): React.ReactNode {
   const auth = useAuth();
   const userLoggedIn = auth?.userLoggedIn;
   const currentUser = auth?.currentUser;
-  const displayName =
-    currentUser?.displayName ?? currentUser?.email?.split("@")[0];
+  const [displayName, setDisplayName] = useState(
+    currentUser?.displayName ?? currentUser?.email?.split("@")[0]
+  );
+  // const puzzlesSolved = auth?.puzzlesSolved;
+
   const profilePictureURL = currentUser?.photoURL ?? null;
+
+  const [puzzlesSolved, setPuzzlesSolved] = useState(0);
 
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -34,20 +46,19 @@ function HomeNavbar(): React.ReactNode {
       });
   };
 
-  const [highestScore, setHighestScore] = useState<number | null>(null);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchHighestScore = async () => {
+    const fetchPuzzlesSolved = async () => {
       if (auth?.currentUser?.email) {
-        const score = await firestoreGetHighestUserScore(
-          auth.currentUser.email
-        );
-        setHighestScore(score);
+        // const userInfo = await firestoreGetUserInfo();
+        if (auth.puzzlesSolved) setPuzzlesSolved(auth.puzzlesSolved);
+        if (auth.username) setDisplayName(auth.username);
       }
     };
 
-    fetchHighestScore();
-  }, [auth?.currentUser?.email]);
+    fetchPuzzlesSolved();
+  }, [auth?.currentUser?.email, auth?.username, auth?.puzzlesSolved]);
 
   return (
     <AppBar
@@ -202,10 +213,24 @@ function HomeNavbar(): React.ReactNode {
                   textTransform: "none",
                 }}
               >
-                HighScore: {highestScore}
+                # Solved: {puzzlesSolved ?? 0}
               </Typography>
             </Box>
           )}
+          {/* Gear Icon */}
+          {userLoggedIn && (
+            <IconButton
+              onClick={() => setIsSettingsModalOpen(true)}
+              sx={{ color: "#000", ml: 2 }}
+              aria-label="Settings"
+            >
+              <Settings />
+            </IconButton>
+          )}
+          <UserSettingsModal
+            isOpen={isSettingsModalOpen}
+            onClose={() => setIsSettingsModalOpen(false)}
+          />
         </Toolbar>
       </Container>
     </AppBar>

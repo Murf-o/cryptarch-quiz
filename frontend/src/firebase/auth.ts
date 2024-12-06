@@ -8,26 +8,36 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { auth } from "./firebase";
+import { firestoreCreateUserInfo } from "./firestore";
 
 export const doCreateUserWithEmailAndPassword = async (
   email: string,
   password: string
 ) => {
-  return createUserWithEmailAndPassword(auth, email, password);
+  await createUserWithEmailAndPassword(auth, email, password); // returns user credential
+  // create user info
+  await firestoreCreateUserInfo(email);
 };
 
 export const doSignInWithEmailAndPassword = async (
   email: string,
   password: string
 ) => {
-  return signInWithEmailAndPassword(auth, email, password);
+  await signInWithEmailAndPassword(auth, email, password);
+
+  /****** REMOVE ONCE ALL CURRENT USERS BACKFILLED ****/ ///
+  await firestoreCreateUserInfo(email);
+  /**************************************************/ ///
 };
 
 export const doSignInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
   // provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
   // auth.useDeviceLanguage();
-  await signInWithPopup(auth, provider);
+  const result = await signInWithPopup(auth, provider);
+  if (!result.user.email) return;
+  //create user info
+  await firestoreCreateUserInfo(result.user.email);
 
   // const credential = GoogleAuthProvider.credentialFromResult(result);
   // if (!credential) return result;
