@@ -204,3 +204,4 @@ export const firestoreIncrementPuzzlesSolved = async () => {
   await updateDoc(doc.ref, {
     puzzlesSolved: currentPuzzlesSolved + 1,
   });
+};
