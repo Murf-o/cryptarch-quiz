@@ -31,8 +31,11 @@ const Board: React.FC<BoardProps> = ({
     Array.from({ length: num_rows }, () => Array(num_cols).fill(null))
   );
   const [itemSelectMessage, setItemSelectMessage] = useState<string>("");
-  const [score, setScore] = useState(0);
+
+  const [score, setScore] = useState<number>(0);
+  const [consecutiveCorrectGuesses, setConsecutiveCorrectGuesses] = useState<number>(1);
   const numAnswersCorrect = useRef(0);
+
 
   const auth = useAuth();
 
@@ -55,11 +58,15 @@ const Board: React.FC<BoardProps> = ({
       (item.tier === colLabels[selectedCol] ||
         item.elementType === colLabels[selectedCol])
     ) {
-      setScore((prev) => prev + 100);
-      setItemSelectMessage("Matches! +100 points");
+
+      setScore((prev) => prev + consecutiveCorrectGuesses*(100));
+      setItemSelectMessage(`Matches! +${consecutiveCorrectGuesses*(100)} points`);
+      setConsecutiveCorrectGuesses((prev) => prev + 1);
       numAnswersCorrect.current += 1;
+
     } else {
       setItemSelectMessage("Incorrect!");
+      setConsecutiveCorrectGuesses(1);
     }
     setIsModalOpen(false);
   };

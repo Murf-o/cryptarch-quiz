@@ -12,6 +12,7 @@ import { firestore } from "./firebase";
 import { getAuth } from "firebase/auth";
 
 const userScoresRef = collection(firestore, "user_scores");
+
 const userInfoRef = collection(firestore, "users");
 const auth = getAuth();
 
@@ -122,6 +123,21 @@ export const firestoreGetHighestUserScore = async (email: string) => {
   }
 };
 
+export const firestoreGetUserScores = async (email: string) => {
+  const q = query(userScoresRef, where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    const scores: number[] = [];
+    querySnapshot.forEach((doc) => {
+      const score = doc.data().score;
+      scores.push(score);
+    });
+    return scores;
+  } else {
+    return null;
+  }
+};
+
 export interface UserStats {
   email: string; // e.g., "something@gmail.com"
   username: string; // e.g., "dumb_user"
@@ -188,4 +204,3 @@ export const firestoreIncrementPuzzlesSolved = async () => {
   await updateDoc(doc.ref, {
     puzzlesSolved: currentPuzzlesSolved + 1,
   });
-};

@@ -11,12 +11,15 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext";
 import { doSignOut } from "../../firebase/auth";
+
+import { firestoreGetHighestUserScore } from "../../firebase/firestore";
 import { Settings } from "@mui/icons-material";
 import UserSettingsModal from "../UserSettingsModal";
 
 const pages = [
   { displayName: "Puzzles", url: "puzzle" },
   { displayName: "Scoreboard", url: "score-board" },
+  { displayName: "Scores", url: "scores" },
 ];
 function HomeNavbar(): React.ReactNode {
   const auth = useAuth();

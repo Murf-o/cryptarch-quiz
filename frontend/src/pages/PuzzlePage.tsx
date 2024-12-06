@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Board from "../components/Board";
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 
 const NUM_ROWS = 3;
 const NUM_COLS = 3;
@@ -61,6 +61,10 @@ function generateColumn(): string[] {
   const combined = new Set<string>([...tiers, ...elements]);
   const columns = selectRandom(Array.from(combined), NUM_COLS);
   return columns;
+}
+
+function handleRestart() {
+  window.location.reload();
 }
 
 function PuzzlePage() {
@@ -126,6 +130,43 @@ function PuzzlePage() {
             colLabels={colLabels}
           />
         </div>
+        <div 
+          style={{ 
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+            <Button
+              variant="contained" 
+              color="primary" 
+              onClick={handleRestart} 
+              sx={{
+                my: 2,
+                ml: 2,
+                color: "#fff", // White text color for better contrast
+                backgroundColor: "#4CAF50", // Vibrant teal background color
+                display: "block",
+                padding: "8px 16px", // Adequate padding for the button
+                fontWeight: 600,
+                textTransform: "none",
+                transition: "background-color 0.3s, box-shadow 0.3s", // Smooth transition for hover effect
+                "&:hover": {
+                  backgroundColor: "#388E3C", // Darker shade of green on hover
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Hover shadow effect for depth
+                },
+                "&:active": {
+                  backgroundColor: "#2C6B2F", // Slightly darker green on click
+                },
+                "&:focus": {
+                  outline: "none", // Remove default focus outline
+                  boxShadow: "0 0 0 2px rgba(76, 175, 80, 0.5)", // Custom focus outline for accessibility
+                },
+              }}
+            >
+              Restart
+            </Button>
+          </div>
         <footer
           style={{
             backgroundColor: "black",
