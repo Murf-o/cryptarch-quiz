@@ -41,6 +41,11 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({
         return;
       }
 
+      if (username.length >= 13) {
+        setError("Username needs to be at less than 13 characters");
+        return;
+      }
+
       const usernameRegex = /^[a-zA-Z0-9_]+$/;
       if (!usernameRegex.test(username)) {
         setError(
