@@ -18,12 +18,14 @@ function ScoresPage() {
     []
   );
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const auth = useAuth();
   const currentUser = auth?.currentUser;
 
   useEffect(() => {
     const fetchScores = async () => {
       if (currentUser?.email) {
+        setIsAuthenticated(true);
         try {
           setLoading(true);
           const userScoreDocs = await firestoreGetUserScores(currentUser.email);
@@ -39,14 +41,14 @@ function ScoresPage() {
         } finally {
           setLoading(false);
         }
-      }
+      } else setLoading(false);
     };
 
     fetchScores();
   }, [currentUser]);
 
   if (loading) {
-    return <CircularProgress sx={{ color: "#fff" }} />;
+    return <CircularProgress sx={{ color: "black" }} />;
   }
 
   const handleCopyLink = (shareLinkId: string) => {
@@ -93,6 +95,27 @@ function ScoresPage() {
       }
     }
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div
+        style={{
+          backgroundColor: "#2f4f4f", // Slate gray background for a modern feel
+          color: "white",
+          height: "100vh", // Full screen height
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "20px",
+        }}
+      >
+        <Typography variant="body1" align="center">
+          Login to see scores
+        </Typography>
+      </div>
+    );
+  }
 
   return (
     <div
