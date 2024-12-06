@@ -52,9 +52,45 @@ function ScoresPage() {
   const handleCopyLink = (shareLinkId: string) => {
     if (shareLinkId) {
       const linkToCopy = `${window.location.origin}/share?id=${shareLinkId}`;
-      navigator.clipboard.writeText(linkToCopy).then(() => {
+
+      // Try to use the Clipboard API
+      if (navigator.clipboard) {
+        navigator.clipboard
+          .writeText(linkToCopy)
+          .then(() => {
+            alert("Link copied to clipboard!");
+          })
+          .catch(() => {
+            // Create an input element to hold the link
+            const input = document.createElement("input");
+            input.value = linkToCopy;
+            document.body.appendChild(input);
+
+            // Select and copy the text inside the input element
+            input.select();
+            document.execCommand("copy");
+
+            // Remove the input element after copying
+            document.body.removeChild(input);
+
+            alert("Link copied to clipboard!");
+          });
+      } else {
+        // Fallback for older browsers or unsupported API
+        // Create an input element to hold the link
+        const input = document.createElement("input");
+        input.value = linkToCopy;
+        document.body.appendChild(input);
+
+        // Select and copy the text inside the input element
+        input.select();
+        document.execCommand("copy");
+
+        // Remove the input element after copying
+        document.body.removeChild(input);
+
         alert("Link copied to clipboard!");
-      });
+      }
     }
   };
 
