@@ -33,10 +33,10 @@ const Board: React.FC<BoardProps> = ({
   const [itemSelectMessage, setItemSelectMessage] = useState<string>("");
 
   const [score, setScore] = useState<number>(0);
-  const [consecutiveCorrectGuesses, setConsecutiveCorrectGuesses] = useState<number>(1);
+  const [consecutiveCorrectGuesses, setConsecutiveCorrectGuesses] =
+    useState<number>(1);
   const numAnswersCorrect = useRef(0);
   const [shareLinkId, setShareLinkId] = useState<string | null>(null);
-
 
   const auth = useAuth();
 
@@ -59,12 +59,12 @@ const Board: React.FC<BoardProps> = ({
       (item.tier === colLabels[selectedCol] ||
         item.elementType === colLabels[selectedCol])
     ) {
-
-      setScore((prev) => prev + consecutiveCorrectGuesses*(100));
-      setItemSelectMessage(`Matches! +${consecutiveCorrectGuesses*(100)} points`);
+      setScore((prev) => prev + consecutiveCorrectGuesses * 100);
+      setItemSelectMessage(
+        `Matches! +${consecutiveCorrectGuesses * 100} points`
+      );
       setConsecutiveCorrectGuesses((prev) => prev + 1);
       numAnswersCorrect.current += 1;
-
     } else {
       setItemSelectMessage("Incorrect!");
       setConsecutiveCorrectGuesses(1);
@@ -202,13 +202,20 @@ const Board: React.FC<BoardProps> = ({
 
           {/* Share Button */}
           {shareLinkId && (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleCopyLink}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
-              Copy Link to Share
-            </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleCopyLink}
+              >
+                Copy Link to Share
+              </Button>
+            </div>
           )}
         </>
       )}
