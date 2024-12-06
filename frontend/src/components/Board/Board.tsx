@@ -118,9 +118,13 @@ const Board: React.FC<BoardProps> = ({
 
   const isGameFinished = answers.flat().every((cell) => cell !== null);
 
+  const saveTriggered = useRef(false);
+
   useEffect(() => {
     const incrementPuzzlesSolved = async () => {
-      if (isGameFinished) {
+      if (isGameFinished && !saveTriggered.current) {
+        saveTriggered.current = true; // Prevent further saves
+
         if (auth?.currentUser?.email) {
           const id = await firestoreSaveUserScore(
             score,
@@ -131,6 +135,7 @@ const Board: React.FC<BoardProps> = ({
           );
           setShareLinkId(id);
         }
+
         if (
           auth?.userLoggedIn &&
           numAnswersCorrect.current === num_rows * num_cols
@@ -142,7 +147,6 @@ const Board: React.FC<BoardProps> = ({
     };
 
     incrementPuzzlesSolved();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isGameFinished]);
 
   return (
