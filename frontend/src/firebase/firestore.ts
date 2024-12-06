@@ -7,8 +7,10 @@ import {
   where,
 } from "firebase/firestore";
 import { firestore } from "./firebase";
+import { getAuth } from "firebase/auth";
 
 const userScoresRef = collection(firestore, "user_scores");
+const auth = getAuth();
 
 export const firestoreSaveUserScore = async (score: number, email: string) => {
   // sanitize score
@@ -49,6 +51,19 @@ export const firestoreGetHighestUserScore = async (email: string) => {
     // If no scores found for this email
     return null;
   }
+};
+
+export const firestoreGetScores = async () => {
+  if (!auth.currentUser) {
+    throw Error("User not authenticated");
+  }
+  const email = auth.currentUser?.email;
+
+  const q = query(userScoresRef, where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map((doc) => {
+    return doc.data();
+  });
 };
 
 export const firestoreGetUserScores = async (email: string) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { firestoreGetUserScores } from "../firebase/firestore"; // Adjust the import as necessary
 import { useAuth } from "../contexts/authContext";
 import { CircularProgress, Typography, List, ListItem, ListItemText } from "@mui/material";
