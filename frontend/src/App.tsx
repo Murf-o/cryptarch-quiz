@@ -38,7 +38,7 @@ const router = createBrowserRouter(
       <Route path="login" element={<LoginPage />} />
       <Route path="register" element={<RegisterPage />} />
       <Route path="score-board" element={<ScoreboardPage />} />
-      <Route path="/share" element={<SharePage />} />
+      <Route path="share" element={<SharePage />} />
     </Route>
   )
 );

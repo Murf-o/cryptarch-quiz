@@ -1,6 +1,8 @@
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
   getDocs,
   orderBy,
   query,
@@ -10,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "./firebase";
 import { getAuth } from "firebase/auth";
+import { WeaponItem } from "../pages/PuzzlePage";
 
 const userScoresRef = collection(firestore, "user_scores");
 
@@ -85,7 +88,9 @@ export const firestoreSetUsername = async (newUsername: string) => {
 export const firestoreSaveUserScore = async (
   score: number,
   email: string,
-  puzzleToString: string
+  rowLabels: string[],
+  colLabels: string[],
+  answers: WeaponItem[][]
 ) => {
   // sanitize score
   if (!Number.isFinite(score) || score < 0) {
@@ -97,13 +102,19 @@ export const firestoreSaveUserScore = async (
   //   throw new Error("Invalid email: Please provide a valid email address.");
   // }
   try {
-    await addDoc(userScoresRef, {
+    // Flatten the answers array to a 1D array
+    const flattenedAnswers = answers.flat().map((item) => item.id);
+
+    const r = await addDoc(userScoresRef, {
       email,
       score,
-      puzzleToString,
+      rowLabels,
+      colLabels,
+      answers: flattenedAnswers,
       date: serverTimestamp(),
       // puzzle, convert puzzle to a string and save it here
     });
+    return r.id;
   } catch (e) {
     throw new Error("Error adding document: " + e);
   }
@@ -209,4 +220,17 @@ export const firestoreIncrementPuzzlesSolved = async () => {
   await updateDoc(doc.ref, {
     puzzlesSolved: currentPuzzlesSolved + 1,
   });
+};
+
+export const firestoreGetPuzzle = async (id: string) => {
+  const docRef = doc(userScoresRef, id); // Get reference to the document by ID
+  const docSnapshot = await getDoc(docRef); // Get the document snapshot
+
+  // Check if document exists
+  if (!docSnapshot.exists()) {
+    throw new Error("No info found");
+  }
+
+  // Return the document data
+  return docSnapshot.data();
 };

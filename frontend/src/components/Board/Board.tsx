@@ -35,6 +35,7 @@ const Board: React.FC<BoardProps> = ({
   const [score, setScore] = useState<number>(0);
   const [consecutiveCorrectGuesses, setConsecutiveCorrectGuesses] = useState<number>(1);
   const numAnswersCorrect = useRef(0);
+  const [shareLinkId, setShareLinkId] = useState<string | null>(null);
 
 
   const auth = useAuth();
@@ -70,37 +71,29 @@ const Board: React.FC<BoardProps> = ({
     }
     setIsModalOpen(false);
   };
+  const handleCopyLink = () => {
+    if (shareLinkId) {
+      const linkToCopy = `${window.location.origin}/share?id=${shareLinkId}`;
+      navigator.clipboard.writeText(linkToCopy).then(() => {
+        alert("Link copied to clipboard!");
+      });
+    }
+  };
 
   const isGameFinished = answers.flat().every((cell) => cell !== null);
-
-  const getPuzzleToString = () => {
-    let puzzleToString = "";
-    // Add row labels
-    puzzleToString += rowLabels.join(",") + "/";
-
-    // Add column labels
-    puzzleToString += colLabels.join(",") + "/";
-
-    // Add answers
-    puzzleToString += answers
-      .map((row) =>
-        row.map((answer) => (answer ? answer.id : "[Empty]")).join(",")
-      )
-      .join(";");
-    return puzzleToString;
-  };
 
   useEffect(() => {
     const incrementPuzzlesSolved = async () => {
       if (isGameFinished) {
         if (auth?.currentUser?.email) {
-          const puzzleToString = getPuzzleToString();
-          console.log(puzzleToString);
-          const url = `http://localhost:5173/share?puzzleToString=${encodeURIComponent(
-            puzzleToString
-          )}&score=${score}`;
-          console.log(url);
-          firestoreSaveUserScore(score, auth.currentUser.email, puzzleToString);
+          const id = await firestoreSaveUserScore(
+            score,
+            auth.currentUser.email,
+            rowLabels,
+            colLabels,
+            answers
+          );
+          setShareLinkId(id);
         }
         if (
           auth?.userLoggedIn &&
@@ -187,24 +180,37 @@ const Board: React.FC<BoardProps> = ({
 
       {/* Game Finished Message */}
       {isGameFinished && (
-        <Typography
-          variant="h5"
-          align="center"
-          sx={{
-            fontFamily: "monospace",
-            mt: 4,
-            color: "white",
-            ml: 22,
-            mb: 3,
-            whiteSpace: "pre-line",
-          }}
-        >
-          {`Game finished with a score of ${score}!\n${
-            auth?.currentUser ? "Score saved." : "Log in to save your score!"
-          }`}
-          {numAnswersCorrect.current === num_rows * num_cols &&
-            "\nCongratulations! You got all answers correct!"}
-        </Typography>
+        <>
+          <Typography
+            variant="h5"
+            align="center"
+            sx={{
+              fontFamily: "monospace",
+              mt: 4,
+              color: "white",
+              ml: 22,
+              mb: 3,
+              whiteSpace: "pre-line",
+            }}
+          >
+            {`Game finished with a score of ${score}!\n${
+              auth?.currentUser ? "Score saved." : "Log in to save your score!"
+            }`}
+            {numAnswersCorrect.current === num_rows * num_cols &&
+              "\nCongratulations! You got all answers correct!"}
+          </Typography>
+
+          {/* Share Button */}
+          {shareLinkId && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCopyLink}
+            >
+              Copy Link to Share
+            </Button>
+          )}
+        </>
       )}
 
       {/* Item Selection Modal */}
