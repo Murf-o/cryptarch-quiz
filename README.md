@@ -7,6 +7,8 @@ Each square represents the intersection of a row and column, corresponding to an
 Your goal is to find and match the correct item for each square <br >
 Log in to save your progress and track your highest scores!
 
+If you're still confused, reference out the list of guns on this [site](https://destinytracker.com/destiny-2/db/items/weapon)
+
 # Tech Stack
 
 - Framework: React
