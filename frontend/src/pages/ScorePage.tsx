@@ -15,8 +15,11 @@ function ScoresPage() {
         try {
           setLoading(true);
           const userScores = await firestoreGetUserScores(currentUser.email);
+          let topTenScores: number[] = [];
           if (userScores != null) {
-            setScores(userScores);
+            userScores.sort((a, b) => b - a);
+            topTenScores = userScores.slice(0, 10);
+            setScores(topTenScores);
           }
         } catch (error) {
           console.error("Error fetching scores:", error);
@@ -34,9 +37,19 @@ function ScoresPage() {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        Previous Scores
+    <div
+      style={{
+        backgroundColor: "#2f4f4f", // Slightly darker slate gray for a modern feel
+        color: "white",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Typography variant="h4" align="center" sx={{ fontWeight: 'bold' }} gutterBottom>
+        Top Scores
       </Typography>
       {scores.length === 0 ? (
         <Typography variant="body1" align="center">

@@ -31,7 +31,7 @@ const router = createBrowserRouter(
       <Route index element={<Navigate to="/puzzle" replace />} />{" "}
       {/* Redirect root to /puzzle */}
       <Route path="puzzle" element={<PuzzlePage />} />
-      <Route path="/scores" element={<ScorePage />} />
+      <Route path="scores" element={<ScorePage />} />
       <Route path="login" element={<LoginPage />} />
       <Route path="register" element={<RegisterPage />} />
     </Route>
