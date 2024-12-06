@@ -73,11 +73,34 @@ const Board: React.FC<BoardProps> = ({
 
   const isGameFinished = answers.flat().every((cell) => cell !== null);
 
+  const getPuzzleToString = () => {
+    let puzzleToString = "";
+    // Add row labels
+    puzzleToString += rowLabels.join(",") + "/";
+
+    // Add column labels
+    puzzleToString += colLabels.join(",") + "/";
+
+    // Add answers
+    puzzleToString += answers
+      .map((row) =>
+        row.map((answer) => (answer ? answer.id : "[Empty]")).join(",")
+      )
+      .join(";");
+    return puzzleToString;
+  };
+
   useEffect(() => {
     const incrementPuzzlesSolved = async () => {
       if (isGameFinished) {
         if (auth?.currentUser?.email) {
-          firestoreSaveUserScore(score, auth.currentUser.email);
+          const puzzleToString = getPuzzleToString();
+          console.log(puzzleToString);
+          const url = `http://localhost:5173/share?puzzleToString=${encodeURIComponent(
+            puzzleToString
+          )}&score=${score}`;
+          console.log(url);
+          firestoreSaveUserScore(score, auth.currentUser.email, puzzleToString);
         }
         if (
           auth?.userLoggedIn &&

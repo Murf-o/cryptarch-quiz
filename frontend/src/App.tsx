@@ -14,6 +14,7 @@ import RegisterPage from "./pages/RegisterPage";
 import { AuthProvider } from "./contexts/authContext";
 import ScoreboardPage from "./pages/ScoreboardPage";
 import { AuthRefreshProvider } from "./contexts/AuthRefreshContext";
+import SharePage from "./pages/SharePage";
 
 // USed so that the redirect to the /puzzle route works
 function LayoutWrapper() {
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
       <Route path="login" element={<LoginPage />} />
       <Route path="register" element={<RegisterPage />} />
       <Route path="score-board" element={<ScoreboardPage />} />
+      <Route path="/share" element={<SharePage />} />
     </Route>
   )
 );

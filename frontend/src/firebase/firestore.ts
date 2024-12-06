@@ -82,7 +82,11 @@ export const firestoreSetUsername = async (newUsername: string) => {
   }
 };
 
-export const firestoreSaveUserScore = async (score: number, email: string) => {
+export const firestoreSaveUserScore = async (
+  score: number,
+  email: string,
+  puzzleToString: string
+) => {
   // sanitize score
   if (!Number.isFinite(score) || score < 0) {
     throw new Error("Invalid score: Score must be a non-negative number.");
@@ -96,6 +100,7 @@ export const firestoreSaveUserScore = async (score: number, email: string) => {
     await addDoc(userScoresRef, {
       email,
       score,
+      puzzleToString,
       date: serverTimestamp(),
       // puzzle, convert puzzle to a string and save it here
     });
