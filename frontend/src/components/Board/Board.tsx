@@ -28,6 +28,7 @@ function Board({
   );
   const [itemSelectMessage, setItemSelectMessage] = useState<string>("");
   const [score, setScore] = useState<number>(0);
+  const [consecutiveCorrectGuesses, setConsecutiveCorrectGuesses] = useState<number>(1);
 
   const auth = useAuth();
 
@@ -49,10 +50,12 @@ function Board({
       (item.tier === colLabels[selectedCol] ||
         item.elementType === colLabels[selectedCol])
     ) {
-      setScore((prev) => prev + 100);
-      setItemSelectMessage("Matches! +100 points");
+      setScore((prev) => prev + consecutiveCorrectGuesses*(100));
+      setItemSelectMessage(`Matches! +${consecutiveCorrectGuesses*(100)} points`);
+      setConsecutiveCorrectGuesses((prev) => prev + 1);
     } else {
       setItemSelectMessage("Incorrect!");
+      setConsecutiveCorrectGuesses(1);
     }
     setIsModalOpen(false);
   };

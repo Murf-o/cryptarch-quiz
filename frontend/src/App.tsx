@@ -7,6 +7,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import PuzzlePage from "./pages/PuzzlePage";
+import ScorePage from "./pages/ScorePage";
 import HomeNavbar from "./components/HomeNavbar";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
       <Route index element={<Navigate to="/puzzle" replace />} />{" "}
       {/* Redirect root to /puzzle */}
       <Route path="puzzle" element={<PuzzlePage />} />
+      <Route path="/scores" element={<ScorePage />} />
       <Route path="login" element={<LoginPage />} />
       <Route path="register" element={<RegisterPage />} />
     </Route>

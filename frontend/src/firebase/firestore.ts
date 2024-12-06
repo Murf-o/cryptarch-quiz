@@ -50,3 +50,18 @@ export const firestoreGetHighestUserScore = async (email: string) => {
     return null;
   }
 };
+
+export const firestoreGetUserScores = async (email: string) => {
+  const q = query(userScoresRef, where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    const scores: number[] = [];
+    querySnapshot.forEach((doc) => {
+      const score = doc.data().score;
+      scores.push(score);
+    });
+    return scores;
+  } else {
+    return null;
+  }
+};

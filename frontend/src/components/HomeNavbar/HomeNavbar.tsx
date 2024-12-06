@@ -12,7 +12,7 @@ import { useAuth } from "../../contexts/authContext";
 import { doSignOut } from "../../firebase/auth";
 import { firestoreGetHighestUserScore } from "../../firebase/firestore";
 
-const pages = [{ displayName: "Puzzles", url: "puzzle" }];
+const pages = [{ displayName: "Puzzles", url: "puzzle" }, { displayName: "Scores", url: "scores" }];
 
 function HomeNavbar(): React.ReactNode {
   const auth = useAuth();
