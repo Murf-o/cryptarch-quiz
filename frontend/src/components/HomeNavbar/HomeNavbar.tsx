@@ -220,7 +220,7 @@ function HomeNavbar(): React.ReactNode {
           )}
           {/* Button to open the modal */}
           <IconButton
-            sx={{ color: "grey", ml: 2 }}
+            sx={{ color: "black", ml: 2 }}
             onClick={() => setIsHowToPlayModalOpen(true)}
           >
             <Help />
