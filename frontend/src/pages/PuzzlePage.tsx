@@ -14,7 +14,22 @@ export interface WeaponItem {
   elementType: string;
   tier: string;
 }
-
+const pageStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "90%",
+  maxWidth: 600,
+  bgcolor: "rgba(20, 20, 40, 0.95)", // Dark background with transparency
+  color: "#FFFFFF", // White text
+  border: "2px solid #6A0DAD", // Glowing purple border
+  boxShadow: "0px 0px 20px 5px #6A0DAD", // Glowing shadow
+  p: 4,
+  borderRadius: 3,
+  textAlign: "center",
+  fontFamily: "'Exo 2', sans-serif", // Futuristic font
+};
 const ITEMS_API = "/item_data";
 
 function selectRandom<T>(arr: T[], n: number): T[] {
@@ -105,12 +120,16 @@ function PuzzlePage() {
     <>
       <div
         style={{
-          backgroundColor: "#2f4f4f",
-          color: "white",
-          height: "100vh",
+          // backgroundColor: "#2f4f4f",
+          // color: "white",
+          minHeight: "100vh",
           width: "100%",
           display: "flex",
           flexDirection: "column",
+          backgroundColor: "rgba(20, 20, 40, 0.95)", // Dark background with transparency
+          color: "#FFFFFF", // White text
+          border: "2px solid #6A0DAD", // Glowing purple border
+          boxShadow: "0px 0px 20px 5px #6A0DAD", // Glowing shadow
         }}
       >
         <div
