@@ -105,8 +105,6 @@ function PuzzlePage() {
     <>
       <div
         style={{
-          // backgroundColor: "#2f4f4f",
-          // color: "white",
           minHeight: "100vh",
           width: "100%",
           display: "flex",
