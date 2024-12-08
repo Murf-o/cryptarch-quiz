@@ -12,8 +12,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext";
 import { doSignOut } from "../../firebase/auth";
 
-import { Settings } from "@mui/icons-material";
+import { Help, Settings } from "@mui/icons-material";
 import UserSettingsModal from "../UserSettingsModal";
+import HowToPlayModal from "../HowToPlayModal";
 
 const pages = [
   { displayName: "Puzzles", url: "puzzle" },
@@ -46,6 +47,7 @@ function HomeNavbar(): React.ReactNode {
   };
 
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isHowToPlayModalOpen, setIsHowToPlayModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchPuzzlesSolved = async () => {
@@ -216,6 +218,17 @@ function HomeNavbar(): React.ReactNode {
               </Typography>
             </Box>
           )}
+          {/* Button to open the modal */}
+          <IconButton
+            sx={{ color: "grey", ml: 2 }}
+            onClick={() => setIsHowToPlayModalOpen(true)}
+          >
+            <Help />
+          </IconButton>
+          <HowToPlayModal
+            isOpen={isHowToPlayModalOpen}
+            onClose={() => setIsHowToPlayModalOpen(false)}
+          />
           {/* Gear Icon */}
           {userLoggedIn && (
             <IconButton
